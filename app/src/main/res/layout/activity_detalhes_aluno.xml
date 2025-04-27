@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/background"
+    android:padding="16dp">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/surface"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="Detalhes do Aluno"
+        app:titleTextColor="@color/on_surface" />
+
+    <TextView
+        android:id="@+id/studentNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/roboto"
+        android:gravity="center"
+        android:text="Nome do Aluno"
+        android:textColor="@color/on_surface"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <TextView
+        android:id="@+id/studentEmailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto"
+        android:gravity="center"
+        android:text="email@exemplo.com"
+        android:textColor="@color/on_surface_variant"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/studentNameTextView" />
+
+    <RelativeLayout
+        android:id="@+id/avatar"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/avatar_background"
+        android:clipToOutline="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/studentEmailTextView">
+
+        <TextView
+            android:id="@+id/avatarInitialTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/roboto"
+            android:text="A"
+            android:textColor="@color/primary"
+            android:textSize="48sp" />
+    </RelativeLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/viewWorkoutsButton"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="280dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:drawableStart="@drawable/ic_visibility"
+        android:drawablePadding="8dp"
+        android:drawableTint="@color/on_primary"
+        android:fontFamily="@font/roboto"
+        android:text="Ver exercícios definidos ao Usuário"
+        android:textColor="@color/on_primary"
+        android:textSize="14sp"
+        app:backgroundTint="@color/primary"
+        app:cornerRadius="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/avatar" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addWorkoutButton"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="280dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_add"
+        android:drawablePadding="8dp"
+        android:drawableTint="@color/on_primary"
+        android:fontFamily="@font/roboto"
+        android:text="Adicionar um exercício ao Usuário"
+        android:textColor="@color/on_primary"
+        android:textSize="14sp"
+        app:backgroundTint="@color/primary"
+        app:cornerRadius="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewWorkoutsButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
