@@ -2,6 +2,7 @@ package com.mycoach.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
@@ -32,5 +33,11 @@ public class PersonalMainActivity extends AppCompatActivity {
             Intent intent = new Intent(PersonalMainActivity.this, GerenciarAlunosActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.personal_main_menu, menu);
+        return true;
     }
 }

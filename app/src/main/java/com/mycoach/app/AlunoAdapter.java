@@ -57,8 +57,8 @@ public class AlunoAdapter extends RecyclerView.Adapter<AlunoAdapter.AlunoViewHol
 
         AlunoViewHolder(@NonNull View itemView) {
             super(itemView);
-            nomeTextView = itemView.findViewById(R.id.studentNameTextView);
-            emailTextView = itemView.findViewById(R.id.studentEmailTextView);
+            nomeTextView = itemView.findViewById(R.id.headline);
+            emailTextView = itemView.findViewById(R.id.supportingText);
         }
     }
 }

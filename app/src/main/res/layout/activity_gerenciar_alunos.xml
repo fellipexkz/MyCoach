@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/background">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="@color/surface"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_back"
-        app:title="Alunos"
-        app:titleTextColor="@color/on_surface" />
+        android:layout_height="wrap_content"
+        android:background="@color/primary_container">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primary_container"
+            app:navigationIcon="@drawable/ic_back"
+            app:title="Alunos"
+            app:titleTextColor="@color/on_primary_container" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/studentsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="64dp"
-        android:layout_marginBottom="56dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/addStudentFab"
+        android:id="@+id/adicionarAlunoFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/surface_container_high"
+        android:backgroundTint="@color/primary"
         android:text="Adicionar aluno"
-        android:textColor="@color/primary"
+        android:textColor="@color/on_primary"
         app:icon="@drawable/ic_add"
-        app:iconTint="@color/primary" />
+        app:iconTint="@color/on_primary"
+        style="@style/Widget.Material3.ExtendedFloatingActionButton.Primary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

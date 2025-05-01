@@ -36,6 +36,7 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
+            android:theme="@style/Theme.MyCoach.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -4,18 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/background"
-    android:padding="16dp">
+    android:background="@color/background">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="@color/surface"
+        android:background="@color/primary_container"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_back"
         app:title="Adicionar Treino"
-        app:titleTextColor="@color/on_surface" />
+        app:titleTextColor="@color/on_primary_container" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/workoutNameTextInputLayout"
