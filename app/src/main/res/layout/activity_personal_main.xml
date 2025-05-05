@@ -18,7 +18,7 @@
         app:titleTextColor="@color/on_primary_container" />
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/manageStudentsCard"
+        android:id="@+id/verExerciciosCard"
         android:layout_width="360dp"
         android:layout_height="56dp"
         android:layout_marginTop="350dp"

@@ -28,7 +28,7 @@ public class PersonalMainActivity extends AppCompatActivity {
             return false;
         });
 
-        MaterialCardView manageStudentsCard = findViewById(R.id.manageStudentsCard);
+        MaterialCardView manageStudentsCard = findViewById(R.id.verExerciciosCard);
         manageStudentsCard.setOnClickListener(v -> {
             Intent intent = new Intent(PersonalMainActivity.this, GerenciarAlunosActivity.class);
             startActivity(intent);
