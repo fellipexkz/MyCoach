@@ -1,26 +1,20 @@
 package com.mycoach.app;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TreinoAdapter extends RecyclerView.Adapter<TreinoAdapter.TreinoViewHolder> {
 
-    private List<Treino> listaTreinos;
+    private List<Treino> treinos;
 
     public TreinoAdapter() {
-        this.listaTreinos = new ArrayList<>();
-    }
-
-    public void setTreinos(List<Treino> treinos) {
-        this.listaTreinos.clear();
-        this.listaTreinos.addAll(treinos);
-        notifyDataSetChanged();
+        this.treinos = new java.util.ArrayList<>();
     }
 
     @NonNull
@@ -33,25 +27,41 @@ public class TreinoAdapter extends RecyclerView.Adapter<TreinoAdapter.TreinoView
 
     @Override
     public void onBindViewHolder(@NonNull TreinoViewHolder holder, int position) {
-        Treino treino = listaTreinos.get(position);
-        holder.nomeTextView.setText(treino.getNome());
-        holder.descricaoTextView.setText(treino.getDescricao() != null ? treino.getDescricao() : "Sem descrição");
-        holder.dataTextView.setText(treino.getData());
+        Treino treino = treinos.get(position);
+        holder.treinoNome.setText(treino.getNome());
+        holder.treinoDescricao.setText(treino.getDescricao());
+        holder.treinoData.setText(treino.getData());
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), DetalhesTreinoActivity.class);
+            intent.putExtra("treino_id", treino.getId());
+            intent.putExtra("treino_nome", treino.getNome());
+            intent.putExtra("treino_descricao", treino.getDescricao());
+            intent.putExtra("treino_data", treino.getData());
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     @Override
     public int getItemCount() {
-        return listaTreinos.size();
+        return treinos.size();
+    }
+
+    public void setTreinos(List<Treino> treinos) {
+        this.treinos.clear();
+        this.treinos.addAll(treinos);
+        notifyDataSetChanged();
     }
 
     static class TreinoViewHolder extends RecyclerView.ViewHolder {
-        TextView nomeTextView, descricaoTextView, dataTextView;
+        TextView treinoNome;
+        TextView treinoDescricao;
+        TextView treinoData;
 
         TreinoViewHolder(@NonNull View itemView) {
             super(itemView);
-            nomeTextView = itemView.findViewById(R.id.workoutNameTextView);
-            descricaoTextView = itemView.findViewById(R.id.workoutDescriptionTextView);
-            dataTextView = itemView.findViewById(R.id.workoutDateTextView);
+            treinoNome = itemView.findViewById(R.id.treinoNome);
+            treinoDescricao = itemView.findViewById(R.id.treinoDescricao);
+            treinoData = itemView.findViewById(R.id.treinoData);
         }
     }
 }

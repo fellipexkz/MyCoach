@@ -4,42 +4,39 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.MaterialToolbar;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.material.card.MaterialCardView;
 
 public class AlunoMainActivity extends AppCompatActivity {
-
-    private RecyclerView treinosRecyclerView;
-    private TreinoAdapter treinoAdapter;
-    private BancoDeDadosHelper bancoDeDadosHelper;
-    private List<Treino> listaTreinos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aluno_main);
 
-        bancoDeDadosHelper = new BancoDeDadosHelper(this);
-        listaTreinos = new ArrayList<>();
-
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        treinosRecyclerView = findViewById(R.id.workoutsRecyclerView);
-        treinosRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        treinoAdapter = new TreinoAdapter();
-        treinosRecyclerView.setAdapter(treinoAdapter);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_logout) {
+                Intent intent = new Intent(AlunoMainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+                return true;
+            }
+            return false;
+        });
 
-        int alunoId = getIntent().getIntExtra("aluno_id", -1);
-        if (alunoId != -1) {
-            listaTreinos.clear();
-            listaTreinos.addAll(bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId));
-            treinoAdapter.setTreinos(listaTreinos);
-        }
+        MaterialCardView manageStudentsCard = findViewById(R.id.verExerciciosCard);
+        manageStudentsCard.setOnClickListener(v -> {
+            int alunoId = getIntent().getIntExtra("aluno_id", -1);
+            Intent intent = new Intent(AlunoMainActivity.this, ExerciciosActivity.class);
+            intent.putExtra("aluno_id", alunoId);
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -58,16 +55,5 @@ public class AlunoMainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        int alunoId = getIntent().getIntExtra("aluno_id", -1);
-        if (alunoId != -1) {
-            listaTreinos.clear();
-            listaTreinos.addAll(bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId));
-            treinoAdapter.setTreinos(listaTreinos);
-        }
     }
 }
