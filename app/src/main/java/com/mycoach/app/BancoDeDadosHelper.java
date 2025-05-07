@@ -132,6 +132,13 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
         return idAluno;
     }
 
+    public boolean emailExiste(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM alunos WHERE email = ?", new String[]{email});
+        boolean existe = cursor.moveToFirst();
+        cursor.close();
+        return existe;
+    }
     public List<Aluno> obterTodosAlunos() {
         List<Aluno> alunos = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -175,6 +182,18 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
         return alunos;
     }
 
+    public boolean adicionarAluno(int id, String nome, String email, String senha) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues valores = new ContentValues();
+        valores.put(COLUNA_ALUNO_ID, id);
+        valores.put(COLUNA_ALUNO_NOME, nome);
+        valores.put(COLUNA_ALUNO_EMAIL, email);
+        valores.put(COLUNA_ALUNO_SENHA, senha);
+
+        long resultado = db.insert(TABELA_ALUNOS, null, valores);
+        db.close();
+        return resultado != -1;
+    }
     public boolean adicionarAluno(String nome, String email, String senha) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valores = new ContentValues();
@@ -224,6 +243,15 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return aluno;
+    }
+
+    public boolean alunoIdExiste(int alunoId)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM treinos WHERE aluno_id = ?", new String[]{String.valueOf(alunoId)});
+        boolean existe = cursor.moveToFirst();
+        cursor.close();
+        return existe;
     }
 
     public boolean adicionarTreino(int alunoId, String nome, String descricao, String data) {
@@ -290,4 +318,21 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
         db.close();
         return listaTreinos;
     }
+
+    public void deletarTodosAlunos() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("alunos", null, null);
+        db.close();
+    }
+
+    public void deletarTodosTreinos() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("treinos", null, null);
+        db.close();
+    }
+
+
+
+
+
 }

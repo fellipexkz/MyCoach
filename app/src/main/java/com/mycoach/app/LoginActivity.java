@@ -27,6 +27,10 @@ public class LoginActivity extends AppCompatActivity {
 
         bancoDeDadosHelper = new BancoDeDadosHelper(this);
 
+        DataFirebase dbfire = new DataFirebase();
+        dbfire.syncWithFirebaseAluno(bancoDeDadosHelper, "alunos");
+        dbfire.syncWithFirebaseTreino(bancoDeDadosHelper,"treinos");
+
         loginButton.setOnClickListener(v -> {
             String email = emailEditText.getText().toString().trim();
             String senha = senhaEditText.getText().toString().trim();

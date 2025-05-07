@@ -3,6 +3,7 @@ package com.mycoach.app;
 public class Treino {
     private int id;
     private int alunoId;
+    private String emailId;
     private String nome;
     private String descricao;
     private String data;
@@ -45,5 +46,12 @@ public class Treino {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public String getAlunoEmailId() { return emailId; }
+
+    public void setAlunoEmailId(String emailId)
+    {
+        this.emailId = emailId;
     }
 }
