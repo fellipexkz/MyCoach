@@ -32,17 +32,16 @@ public class VisualizarTreinosActivity extends AppCompatActivity {
         treinoAdapter = new TreinoAdapter();
         treinosRecyclerView.setAdapter(treinoAdapter);
 
-        int alunoId = getIntent().getIntExtra("aluno_id", -1);
-        if (alunoId != -1) {
-            listaTreinos.clear();
-            listaTreinos.addAll(bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId));
-            treinoAdapter.setTreinos(listaTreinos);
-        }
+        loadTrains();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        loadTrains();
+    }
+    private void loadTrains()
+    {
         int alunoId = getIntent().getIntExtra("aluno_id", -1);
         if (alunoId != -1) {
             listaTreinos.clear();
