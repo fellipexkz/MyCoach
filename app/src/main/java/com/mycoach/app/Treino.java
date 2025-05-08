@@ -1,11 +1,19 @@
 package com.mycoach.app;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Treino {
     private int id;
     private int alunoId;
     private String nome;
-    private String descricao;
-    private String data;
+    private String observacao;
+    private String diaSemana;
+    private List<Exercicio> exercicios;
+
+    public Treino() {
+        this.exercicios = new ArrayList<>();
+    }
 
     public int getId() {
         return id;
@@ -31,19 +39,27 @@ public class Treino {
         this.nome = nome;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getObservacao() {
+        return observacao;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
     }
 
-    public String getData() {
-        return data;
+    public String getDiaSemana() {
+        return diaSemana;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setDiaSemana(String diaSemana) {
+        this.diaSemana = diaSemana;
+    }
+
+    public List<Exercicio> getExercicios() {
+        return exercicios;
+    }
+
+    public void setExercicios(List<Exercicio> exercicios) {
+        this.exercicios = exercicios;
     }
 }

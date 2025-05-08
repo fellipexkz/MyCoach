@@ -58,8 +58,8 @@ public class GerenciarTreinosActivity extends AppCompatActivity {
                 }
 
                 int studentId = alunoList.get(selectedPosition - 1).getId();
-                boolean success = bancoDeDadosHelper.adicionarTreino(studentId, workoutName, description, date);
-                if (success) {
+                long result = bancoDeDadosHelper.adicionarTreino(studentId, workoutName, description, date);
+                if (result != -1) {
                     Toast.makeText(GerenciarTreinosActivity.this, "Treino adicionado com sucesso", Toast.LENGTH_SHORT).show();
                     workoutNameEditText.setText("");
                     workoutDescriptionEditText.setText("");

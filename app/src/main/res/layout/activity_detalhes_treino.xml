@@ -41,7 +41,7 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
-                android:id="@+id/detalheTreinoData"
+                android:id="@+id/detalheTreinoDiaSemana"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
@@ -52,15 +52,37 @@
                 android:layout_marginTop="8dp" />
 
             <TextView
-                android:id="@+id/detalheTreinoDescricao"
+                android:id="@+id/detalheTreinoObservacao"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@color/on_surface"
-                app:layout_constraintTop_toBottomOf="@id/detalheTreinoData"
+                app:layout_constraintTop_toBottomOf="@id/detalheTreinoDiaSemana"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/exerciciosLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Exercícios"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/on_surface"
+                app:layout_constraintTop_toBottomOf="@id/detalheTreinoObservacao"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/exerciciosRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/exerciciosLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

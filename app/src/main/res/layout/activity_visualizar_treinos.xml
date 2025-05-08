@@ -17,7 +17,7 @@
         app:titleTextColor="@color/on_primary_container" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/workoutsRecyclerView"
+        android:id="@+id/treinosRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="64dp"

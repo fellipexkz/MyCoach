@@ -25,24 +25,12 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
-            android:id="@+id/treinoDescricao"
+            android:id="@+id/treinoExerciciosCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="@color/on_surface_variant"
             app:layout_constraintTop_toBottomOf="@id/treinoNome"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:maxLines="2"
-            android:ellipsize="end" />
-
-        <TextView
-            android:id="@+id/treinoData"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/on_surface_variant"
-            app:layout_constraintTop_toBottomOf="@id/treinoDescricao"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

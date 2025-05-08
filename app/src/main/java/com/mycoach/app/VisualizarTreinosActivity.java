@@ -1,53 +1,49 @@
 package com.mycoach.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.MaterialToolbar;
-import java.util.ArrayList;
 import java.util.List;
 
 public class VisualizarTreinosActivity extends AppCompatActivity {
 
     private RecyclerView treinosRecyclerView;
     private TreinoAdapter treinoAdapter;
-    private BancoDeDadosHelper bancoDeDadosHelper;
-    private List<Treino> listaTreinos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_treinos);
 
-        bancoDeDadosHelper = new BancoDeDadosHelper(this);
-        listaTreinos = new ArrayList<>();
-
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        treinosRecyclerView = findViewById(R.id.workoutsRecyclerView);
+        int alunoId = getIntent().getIntExtra("aluno_id", -1);
+        if (alunoId == -1) {
+            finish();
+            return;
+        }
+
+        treinosRecyclerView = findViewById(R.id.treinosRecyclerView);
         treinosRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        treinoAdapter = new TreinoAdapter();
+        treinoAdapter = new TreinoAdapter(treinos -> {
+            Treino treino = treinos;
+            Intent intent = new Intent(VisualizarTreinosActivity.this, DetalhesTreinoActivity.class);
+            intent.putExtra("treino_id", treino.getId());
+            intent.putExtra("aluno_id", alunoId);
+            intent.putExtra("treino_nome", treino.getNome());
+            intent.putExtra("treino_observacao", treino.getObservacao());
+            intent.putExtra("treino_dia_semana", treino.getDiaSemana());
+            startActivity(intent);
+        });
         treinosRecyclerView.setAdapter(treinoAdapter);
 
-        int alunoId = getIntent().getIntExtra("aluno_id", -1);
-        if (alunoId != -1) {
-            listaTreinos.clear();
-            listaTreinos.addAll(bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId));
-            treinoAdapter.setTreinos(listaTreinos);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        int alunoId = getIntent().getIntExtra("aluno_id", -1);
-        if (alunoId != -1) {
-            listaTreinos.clear();
-            listaTreinos.addAll(bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId));
-            treinoAdapter.setTreinos(listaTreinos);
-        }
+        BancoDeDadosHelper db = new BancoDeDadosHelper(this);
+        List<Treino> treinos = db.obterTreinosPorAlunoId(alunoId);
+        treinoAdapter.setTreinos(treinos);
     }
 }

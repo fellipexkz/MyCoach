@@ -5,13 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BancoDeDadosHelper extends SQLiteOpenHelper {
 
     private static final String NOME_BANCO = "mycoach.db";
-    private static final int VERSAO_BANCO = 1;
+    private static final int VERSAO_BANCO = 2;
 
     private static final String TABELA_PERSONAL = "personal";
     private static final String COLUNA_PERSONAL_ID = "id";
@@ -28,8 +29,20 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
     private static final String COLUNA_TREINO_ID = "id";
     private static final String COLUNA_TREINO_ALUNO_ID = "aluno_id";
     private static final String COLUNA_TREINO_NOME = "nome";
-    private static final String COLUNA_TREINO_DESCRICAO = "descricao";
-    private static final String COLUNA_TREINO_DATA = "data";
+    private static final String COLUNA_TREINO_OBSERVACAO = "observacao";
+    private static final String COLUNA_TREINO_DIA_SEMANA = "dia_semana";
+
+    private static final String TABELA_EXERCICIOS = "exercicios";
+    private static final String COLUNA_EXERCICIO_ID = "id";
+    private static final String COLUNA_EXERCICIO_TREINO_ID = "treino_id";
+    private static final String COLUNA_EXERCICIO_NOME = "nome";
+    private static final String COLUNA_EXERCICIO_TEMPO_DESCANSO = "tempo_descanso";
+
+    private static final String TABELA_SERIES = "series";
+    private static final String COLUNA_SERIE_ID = "id";
+    private static final String COLUNA_SERIE_EXERCICIO_ID = "exercicio_id";
+    private static final String COLUNA_SERIE_CARGA = "carga";
+    private static final String COLUNA_SERIE_REPETICOES = "repeticoes";
 
     public BancoDeDadosHelper(Context context) {
         super(context, NOME_BANCO, null, VERSAO_BANCO);
@@ -59,10 +72,26 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
                 COLUNA_TREINO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUNA_TREINO_ALUNO_ID + " INTEGER NOT NULL, " +
                 COLUNA_TREINO_NOME + " TEXT NOT NULL, " +
-                COLUNA_TREINO_DESCRICAO + " TEXT, " +
-                COLUNA_TREINO_DATA + " TEXT NOT NULL, " +
+                COLUNA_TREINO_OBSERVACAO + " TEXT, " +
+                COLUNA_TREINO_DIA_SEMANA + " TEXT NOT NULL, " +
                 "FOREIGN KEY (" + COLUNA_TREINO_ALUNO_ID + ") REFERENCES " + TABELA_ALUNOS + "(" + COLUNA_ALUNO_ID + "))";
         db.execSQL(criarTabelaTreinos);
+
+        String criarTabelaExercicios = "CREATE TABLE " + TABELA_EXERCICIOS + " (" +
+                COLUNA_EXERCICIO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUNA_EXERCICIO_TREINO_ID + " INTEGER NOT NULL, " +
+                COLUNA_EXERCICIO_NOME + " TEXT NOT NULL, " +
+                COLUNA_EXERCICIO_TEMPO_DESCANSO + " TEXT NOT NULL, " +
+                "FOREIGN KEY (" + COLUNA_EXERCICIO_TREINO_ID + ") REFERENCES " + TABELA_TREINOS + "(" + COLUNA_TREINO_ID + "))";
+        db.execSQL(criarTabelaExercicios);
+
+        String criarTabelaSeries = "CREATE TABLE " + TABELA_SERIES + " (" +
+                COLUNA_SERIE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUNA_SERIE_EXERCICIO_ID + " INTEGER NOT NULL, " +
+                COLUNA_SERIE_CARGA + " TEXT NOT NULL, " +
+                COLUNA_SERIE_REPETICOES + " INTEGER NOT NULL, " +
+                "FOREIGN KEY (" + COLUNA_SERIE_EXERCICIO_ID + ") REFERENCES " + TABELA_EXERCICIOS + "(" + COLUNA_EXERCICIO_ID + "))";
+        db.execSQL(criarTabelaSeries);
     }
 
     @Override
@@ -70,6 +99,8 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABELA_PERSONAL);
         db.execSQL("DROP TABLE IF EXISTS " + TABELA_ALUNOS);
         db.execSQL("DROP TABLE IF EXISTS " + TABELA_TREINOS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABELA_EXERCICIOS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABELA_SERIES);
         onCreate(db);
     }
 
@@ -226,68 +257,181 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
         return aluno;
     }
 
-    public boolean adicionarTreino(int alunoId, String nome, String descricao, String data) {
+    public long adicionarTreino(int alunoId, String nome, String observacao, String diaSemana) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUNA_TREINO_ALUNO_ID, alunoId);
         values.put(COLUNA_TREINO_NOME, nome);
-        values.put(COLUNA_TREINO_DESCRICAO, descricao);
-        values.put(COLUNA_TREINO_DATA, data);
+        values.put(COLUNA_TREINO_OBSERVACAO, observacao);
+        values.put(COLUNA_TREINO_DIA_SEMANA, diaSemana);
 
         long result = db.insert(TABELA_TREINOS, null, values);
         db.close();
-        return result != -1;
+        return result;
+    }
+
+    public long adicionarExercicio(int treinoId, String nome, String tempoDescanso) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUNA_EXERCICIO_TREINO_ID, treinoId);
+        values.put(COLUNA_EXERCICIO_NOME, nome);
+        values.put(COLUNA_EXERCICIO_TEMPO_DESCANSO, tempoDescanso);
+
+        long result = db.insert(TABELA_EXERCICIOS, null, values);
+        db.close();
+        return result;
+    }
+
+    public long adicionarSerie(int exercicioId, String carga, int repeticoes) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUNA_SERIE_EXERCICIO_ID, exercicioId);
+        values.put(COLUNA_SERIE_CARGA, carga);
+        values.put(COLUNA_SERIE_REPETICOES, repeticoes);
+
+        long result = db.insert(TABELA_SERIES, null, values);
+        db.close();
+        return result;
     }
 
     public List<Treino> obterTreinosPorAlunoId(int idAluno) {
         List<Treino> listaTreinos = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(
+        Cursor cursorTreinos = db.rawQuery(
                 "SELECT * FROM " + TABELA_TREINOS + " WHERE " + COLUNA_TREINO_ALUNO_ID + " = ?",
                 new String[]{String.valueOf(idAluno)}
         );
 
-        if (cursor.moveToFirst()) {
+        Log.d("BancoDeDadosHelper", "Consultando treinos para aluno ID: " + idAluno);
+
+        if (cursorTreinos.moveToFirst()) {
             do {
                 Treino treino = new Treino();
-                int idIndex = cursor.getColumnIndex(COLUNA_TREINO_ID);
-                int alunoIdIndex = cursor.getColumnIndex(COLUNA_TREINO_ALUNO_ID);
-                int nomeIndex = cursor.getColumnIndex(COLUNA_TREINO_NOME);
-                int descricaoIndex = cursor.getColumnIndex(COLUNA_TREINO_DESCRICAO);
-                int dataIndex = cursor.getColumnIndex(COLUNA_TREINO_DATA);
+                int idIndex = cursorTreinos.getColumnIndex(COLUNA_TREINO_ID);
+                int alunoIdIndex = cursorTreinos.getColumnIndex(COLUNA_TREINO_ALUNO_ID);
+                int nomeIndex = cursorTreinos.getColumnIndex(COLUNA_TREINO_NOME);
+                int observacaoIndex = cursorTreinos.getColumnIndex(COLUNA_TREINO_OBSERVACAO);
+                int diaSemanaIndex = cursorTreinos.getColumnIndex(COLUNA_TREINO_DIA_SEMANA);
 
                 if (idIndex >= 0) {
-                    treino.setId(cursor.getInt(idIndex));
+                    treino.setId(cursorTreinos.getInt(idIndex));
                 } else {
                     throw new IllegalStateException("Coluna " + COLUNA_TREINO_ID + " não encontrada no resultado da consulta.");
                 }
                 if (alunoIdIndex >= 0) {
-                    treino.setAlunoId(cursor.getInt(alunoIdIndex));
+                    treino.setAlunoId(cursorTreinos.getInt(alunoIdIndex));
                 } else {
                     throw new IllegalStateException("Coluna " + COLUNA_TREINO_ALUNO_ID + " não encontrada no resultado da consulta.");
                 }
                 if (nomeIndex >= 0) {
-                    treino.setNome(cursor.getString(nomeIndex));
+                    treino.setNome(cursorTreinos.getString(nomeIndex));
                 } else {
                     throw new IllegalStateException("Coluna " + COLUNA_TREINO_NOME + " não encontrada no resultado da consulta.");
                 }
-                if (descricaoIndex >= 0) {
-                    treino.setDescricao(cursor.getString(descricaoIndex));
+                if (observacaoIndex >= 0) {
+                    treino.setObservacao(cursorTreinos.getString(observacaoIndex));
                 } else {
-                    throw new IllegalStateException("Coluna " + COLUNA_TREINO_DESCRICAO + " não encontrada no resultado da consulta.");
+                    throw new IllegalStateException("Coluna " + COLUNA_TREINO_OBSERVACAO + " não encontrada no resultado da consulta.");
                 }
-                if (dataIndex >= 0) {
-                    treino.setData(cursor.getString(dataIndex));
+                if (diaSemanaIndex >= 0) {
+                    treino.setDiaSemana(cursorTreinos.getString(diaSemanaIndex));
                 } else {
-                    throw new IllegalStateException("Coluna " + COLUNA_TREINO_DATA + " não encontrada no resultado da consulta.");
+                    throw new IllegalStateException("Coluna " + COLUNA_TREINO_DIA_SEMANA + " não encontrada no resultado da consulta.");
                 }
 
+                Log.d("BancoDeDadosHelper", "Treino encontrado - ID: " + treino.getId() + ", Nome: " + treino.getNome());
+
+                List<Exercicio> exercicios = new ArrayList<>();
+                Cursor cursorExercicios = db.rawQuery(
+                        "SELECT * FROM " + TABELA_EXERCICIOS + " WHERE " + COLUNA_EXERCICIO_TREINO_ID + " = ?",
+                        new String[]{String.valueOf(treino.getId())}
+                );
+
+                if (cursorExercicios.moveToFirst()) {
+                    do {
+                        Exercicio exercicio = new Exercicio();
+                        int exercicioIdIndex = cursorExercicios.getColumnIndex(COLUNA_EXERCICIO_ID);
+                        int exercicioTreinoIdIndex = cursorExercicios.getColumnIndex(COLUNA_EXERCICIO_TREINO_ID);
+                        int exercicioNomeIndex = cursorExercicios.getColumnIndex(COLUNA_EXERCICIO_NOME);
+                        int tempoDescansoIndex = cursorExercicios.getColumnIndex(COLUNA_EXERCICIO_TEMPO_DESCANSO);
+
+                        if (exercicioIdIndex >= 0) {
+                            exercicio.setId(cursorExercicios.getInt(exercicioIdIndex));
+                        } else {
+                            throw new IllegalStateException("Coluna " + COLUNA_EXERCICIO_ID + " não encontrada.");
+                        }
+                        if (exercicioTreinoIdIndex >= 0) {
+                            exercicio.setTreinoId(cursorExercicios.getInt(exercicioTreinoIdIndex));
+                        } else {
+                            throw new IllegalStateException("Coluna " + COLUNA_EXERCICIO_TREINO_ID + " não encontrada.");
+                        }
+                        if (exercicioNomeIndex >= 0) {
+                            exercicio.setNome(cursorExercicios.getString(exercicioNomeIndex));
+                        } else {
+                            throw new IllegalStateException("Coluna " + COLUNA_EXERCICIO_NOME + " não encontrada.");
+                        }
+                        if (tempoDescansoIndex >= 0) {
+                            exercicio.setTempoDescanso(cursorExercicios.getString(tempoDescansoIndex));
+                        } else {
+                            throw new IllegalStateException("Coluna " + COLUNA_EXERCICIO_TEMPO_DESCANSO + " não encontrada.");
+                        }
+
+                        Log.d("BancoDeDadosHelper", "Exercício encontrado - ID: " + exercicio.getId() + ", Nome: " + exercicio.getNome());
+
+                        List<Serie> series = new ArrayList<>();
+                        Cursor cursorSeries = db.rawQuery(
+                                "SELECT * FROM " + TABELA_SERIES + " WHERE " + COLUNA_SERIE_EXERCICIO_ID + " = ?",
+                                new String[]{String.valueOf(exercicio.getId())}
+                        );
+
+                        if (cursorSeries.moveToFirst()) {
+                            do {
+                                Serie serie = new Serie();
+                                int serieIdIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_ID);
+                                int serieExercicioIdIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_EXERCICIO_ID);
+                                int cargaIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_CARGA);
+                                int repeticoesIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_REPETICOES);
+
+                                if (serieIdIndex >= 0) {
+                                    serie.setId(cursorSeries.getInt(serieIdIndex));
+                                } else {
+                                    throw new IllegalStateException("Coluna " + COLUNA_SERIE_ID + " não encontrada.");
+                                }
+                                if (serieExercicioIdIndex >= 0) {
+                                    serie.setExercicioId(cursorSeries.getInt(serieExercicioIdIndex));
+                                } else {
+                                    throw new IllegalStateException("Coluna " + COLUNA_SERIE_EXERCICIO_ID + " não encontrada.");
+                                }
+                                if (cargaIndex >= 0) {
+                                    serie.setCarga(cursorSeries.getString(cargaIndex));
+                                } else {
+                                    throw new IllegalStateException("Coluna " + COLUNA_SERIE_CARGA + " não encontrada.");
+                                }
+                                if (repeticoesIndex >= 0) {
+                                    serie.setRepeticoes(String.valueOf(cursorSeries.getInt(repeticoesIndex)));
+                                } else {
+                                    throw new IllegalStateException("Coluna " + COLUNA_SERIE_REPETICOES + " não encontrada.");
+                                }
+
+                                series.add(serie);
+                                Log.d("BancoDeDadosHelper", "Série encontrada - ID: " + serie.getId() + ", Carga: " + serie.getCarga() + ", Repetições: " + serie.getRepeticoes());
+                            } while (cursorSeries.moveToNext());
+                        }
+                        cursorSeries.close();
+                        exercicio.setSeries(series);
+                        exercicios.add(exercicio);
+                    } while (cursorExercicios.moveToNext());
+                }
+                cursorExercicios.close();
+                treino.setExercicios(exercicios);
                 listaTreinos.add(treino);
-            } while (cursor.moveToNext());
+                Log.d("BancoDeDadosHelper", "Treino " + treino.getId() + " - Exercícios: " + exercicios.size() + ", Séries totais: " + exercicios.stream().mapToInt(ex -> ex.getSeries().size()).sum());
+            } while (cursorTreinos.moveToNext());
         }
 
-        cursor.close();
+        cursorTreinos.close();
         db.close();
+        Log.d("BancoDeDadosHelper", "Total de treinos encontrados: " + listaTreinos.size());
         return listaTreinos;
     }
 }
