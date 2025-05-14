@@ -2,6 +2,7 @@ package com.mycoach.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,6 +27,12 @@ public class LoginActivity extends AppCompatActivity {
         signUpTextView = findViewById(R.id.signUpTextView);
 
         bancoDeDadosHelper = new BancoDeDadosHelper(this);
+
+        DataFirebase dbfire = new DataFirebase();
+        dbfire.syncWithFirebaseAluno(bancoDeDadosHelper, "alunos");
+        dbfire.syncWithFirebaseTreino(bancoDeDadosHelper, "treinos");
+        dbfire.syncWithFirebaseExercise(bancoDeDadosHelper, "exercicios");
+        dbfire.syncWithFirebaseSerie(bancoDeDadosHelper, "series");
 
         loginButton.setOnClickListener(v -> {
             String email = emailEditText.getText().toString().trim();

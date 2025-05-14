@@ -23,6 +23,7 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
     private RecyclerView exerciciosRecyclerView;
     private ExercicioFormAdapter exercicioAdapter;
     private BancoDeDadosHelper bancoDeDadosHelper;
+    private DataFirebase dbfire = new DataFirebase();
 
     private static final String[] DIAS_SEMANA = {
             "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira",
@@ -106,6 +107,7 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
     }
 
     private void salvarTreino() {
+        Treino treino = new Treino();
         String nome = treinoNomeInput.getText().toString().trim();
         String observacao = treinoObservacaoInput.getText().toString().trim();
         String diaSemana = treinoDiaSemanaInput.getText().toString().trim();
@@ -139,6 +141,7 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
         }
 
         Log.d("AdicionarTreinoActivity", "Treino salvo - ID: " + treinoId + ", Nome: " + nome);
+        treino.setId((int)treinoId);
 
         for (Exercicio exercicio : exercicioAdapter.getExercicios()) {
             String exercicioNome = exercicio.getNome().trim();
@@ -156,6 +159,11 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
             }
 
             Log.d("AdicionarTreinoActivity", "Exercício salvo - ID: " + exercicioId + ", Nome: " + exercicioNome + ", Tempo Descanso: " + tempoDescanso);
+            exercicio.setId((int) exercicioId);
+            exercicio.setTreinoId((int) treinoId);
+            exercicio.setNome(exercicioNome);
+            exercicio.setTempoDescanso(tempoDescanso);
+            dbfire.sendFirebaseExercise(exercicio, "exercicios", bancoDeDadosHelper);
 
             for (Serie serie : exercicio.getSeries()) {
                 String carga = serie.getCarga().trim();
@@ -183,12 +191,32 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
                     Toast.makeText(this, "Erro ao adicionar série", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                serie.setCarga(carga);
+                serie.setExercicioId((int) exercicioId);
+                serie.setRepeticoes(repeticoes.trim());
+
+                dbfire.sendFirebaseSerie(serie, "series", bancoDeDadosHelper);
+                dbfire.syncWithFirebaseSerie(bancoDeDadosHelper, "series");
 
                 Log.d("AdicionarTreinoActivity", "Série salva - ID: " + serieId + ", Carga: " + carga + ", Repetições: " + repeticoes);
             }
         }
 
         Toast.makeText(this, "Treino adicionado com sucesso", Toast.LENGTH_SHORT).show();
+
+        // Enviar para o Firebase
+        // Treino
+        treino.setAlunoId(alunoId);
+        treino.setObservacao(observacao.isEmpty() ? null : observacao);
+        treino.setDiaSemana(diaSemana);
+        treino.setNome(nome);
+        dbfire.sendFirebaseTreino(treino,"treinos",bancoDeDadosHelper);
+        dbfire.syncWithFirebaseTreino(bancoDeDadosHelper, "treinos");
+        dbfire.syncWithFirebaseExercise(bancoDeDadosHelper, "exercicios");
+
+
+
+
         Intent intent = new Intent(this, DetalhesTreinoActivity.class);
         intent.putExtra("treino_id", (int) treinoId);
         intent.putExtra("aluno_id", alunoId);

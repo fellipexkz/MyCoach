@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1027833583886",
+    "project_id": "mycoach-bc891",
+    "storage_bucket": "mycoach-bc891.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027833583886:android:3dae10fd7d22c319775f5f",
+        "android_client_info": {
+          "package_name": "com.mycoach.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCctywADHWtsfZOYvNdinOaJrzu-5xy1Ak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
