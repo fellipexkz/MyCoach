@@ -25,6 +25,9 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
     private BancoDeDadosHelper bancoDeDadosHelper;
     private DataFirebase dbfire = new DataFirebase();
 
+    private boolean paro = false;
+    private boolean checkout_val = false;
+
     private static final String[] DIAS_SEMANA = {
             "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira",
             "Sexta-feira", "Sábado", "Domingo"
@@ -159,47 +162,71 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
             }
 
             Log.d("AdicionarTreinoActivity", "Exercício salvo - ID: " + exercicioId + ", Nome: " + exercicioNome + ", Tempo Descanso: " + tempoDescanso);
+
+
+            for (Serie serie : exercicio.getSeries()) {
+                if(!checkout_val) {
+                    for (Serie series : exercicio.getSeries()) {
+                        String carga = series.getCarga().trim();
+                        String repeticoes = series.getRepeticoes().trim();
+                        if (carga.isEmpty() || repeticoes.isEmpty()) {
+                            Toast.makeText(this, "Preencha todos os campos das séries", Toast.LENGTH_SHORT).show();
+                            paro = true;
+                            return;
+                        } else {
+                            paro = false;
+                        }
+                    }
+                    checkout_val = true;
+                }
+                Log.d("Lado", "Fora");
+
+                String carga = serie.getCarga().trim();
+                String repeticoes = serie.getRepeticoes().trim();
+                if(!paro) {
+                    int i = exercicio.getSeries().size();
+                    Log.d("Lado", "Lado de dentro");
+
+
+//                    if (carga.isEmpty() || repeticoes.isEmpty()) {
+//                        Toast.makeText(this, "Preencha todos os campos das séries", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+
+                    int repeticoesInt;
+
+                    try {
+                        repeticoesInt = Integer.parseInt(repeticoes);
+                        if (repeticoesInt <= 0) {
+                            Toast.makeText(this, "O número de repetições deve ser maior que 0", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(this, "O número de repetições deve ser um valor numérico válido", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    long serieId = bancoDeDadosHelper.adicionarSerie((int) exercicioId, carga, repeticoesInt);
+                    if (serieId == -1) {
+                        Toast.makeText(this, "Erro ao adicionar série", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    serie.setCarga(carga);
+                    serie.setExercicioId((int) exercicioId);
+                    serie.setRepeticoes(repeticoes.trim());
+
+                    dbfire.sendFirebaseSerie(serie, "series", bancoDeDadosHelper);
+                    dbfire.syncWithFirebaseSerie(bancoDeDadosHelper, "series");
+                    Log.d("AdicionarTreinoActivity", "Série salva - ID: " + serieId + ", Carga: " + carga + ", Repetições: " + repeticoes);
+                }
+            }
             exercicio.setId((int) exercicioId);
             exercicio.setTreinoId((int) treinoId);
             exercicio.setNome(exercicioNome);
             exercicio.setTempoDescanso(tempoDescanso);
             dbfire.sendFirebaseExercise(exercicio, "exercicios", bancoDeDadosHelper);
 
-            for (Serie serie : exercicio.getSeries()) {
-                String carga = serie.getCarga().trim();
-                String repeticoes = serie.getRepeticoes().trim();
 
-                if (carga.isEmpty() || repeticoes.isEmpty()) {
-                    Toast.makeText(this, "Preencha todos os campos das séries", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                int repeticoesInt;
-                try {
-                    repeticoesInt = Integer.parseInt(repeticoes);
-                    if (repeticoesInt <= 0) {
-                        Toast.makeText(this, "O número de repetições deve ser maior que 0", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    Toast.makeText(this, "O número de repetições deve ser um valor numérico válido", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                long serieId = bancoDeDadosHelper.adicionarSerie((int) exercicioId, carga, repeticoesInt);
-                if (serieId == -1) {
-                    Toast.makeText(this, "Erro ao adicionar série", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                serie.setCarga(carga);
-                serie.setExercicioId((int) exercicioId);
-                serie.setRepeticoes(repeticoes.trim());
-
-                dbfire.sendFirebaseSerie(serie, "series", bancoDeDadosHelper);
-                dbfire.syncWithFirebaseSerie(bancoDeDadosHelper, "series");
-
-                Log.d("AdicionarTreinoActivity", "Série salva - ID: " + serieId + ", Carga: " + carga + ", Repetições: " + repeticoes);
-            }
         }
 
         Toast.makeText(this, "Treino adicionado com sucesso", Toast.LENGTH_SHORT).show();

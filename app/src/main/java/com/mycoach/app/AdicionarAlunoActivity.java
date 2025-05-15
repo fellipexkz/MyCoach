@@ -70,6 +70,6 @@ public class AdicionarAlunoActivity extends AppCompatActivity {
         for (Aluno u : users) {
             if (u.getId() > maxId) maxId = u.getId();
         }
-        return maxId + 1;
+        return maxId;
     }
 }
