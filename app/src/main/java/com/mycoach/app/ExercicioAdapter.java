@@ -36,7 +36,7 @@ public class ExercicioAdapter extends RecyclerView.Adapter<ExercicioAdapter.Exer
     @Override
     public void onBindViewHolder(@NonNull ExercicioViewHolder holder, int position) {
         Exercicio exercicio = exercicios.get(position);
-        Log.d("ExercicioAdapter", "Exibindo exercício - Nome: " + exercicio.getNome() + ", Séries: " + exercicio.getSeries().size());
+        Log.d("ExercicioAdapter", "Exibindo exercício - Nome: " + exercicio.getNome() + ", Séries: " + exercicio.getSeries().size()+", ID associado: "+exercicio.getId()+ ", ID Treino: "+exercicio.getTreinoId());
         holder.exercicioNomeText.setText(exercicio.getNome());
         holder.exercicioTempoDescansoText.setText(exercicio.getTempoDescanso());
 
