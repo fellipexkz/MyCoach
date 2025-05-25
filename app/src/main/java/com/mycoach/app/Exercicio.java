@@ -12,6 +12,8 @@ public class Exercicio {
 
     public Exercicio() {
         this.series = new ArrayList<>();
+        this.nome = "";
+        this.tempoDescanso = "1min 0s";
     }
 
     public int getId() {
@@ -39,7 +41,7 @@ public class Exercicio {
     }
 
     public String getTempoDescanso() {
-        return tempoDescanso;
+        return tempoDescanso != null ? tempoDescanso : "1min 0s";
     }
 
     public void setTempoDescanso(String tempoDescanso) {

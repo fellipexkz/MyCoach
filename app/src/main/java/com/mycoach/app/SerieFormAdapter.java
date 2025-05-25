@@ -3,9 +3,11 @@ package com.mycoach.app;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.textfield.TextInputEditText;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class SerieFormAdapter extends RecyclerView.Adapter<SerieFormAdapter.Seri
     @Override
     public void onBindViewHolder(@NonNull SerieViewHolder holder, int position) {
         Serie serie = series.get(position);
+        holder.serieNumero.setText(String.valueOf(position + 1));
         holder.serieCargaInput.setText(serie.getCarga());
         holder.serieRepeticoesInput.setText(serie.getRepeticoes());
     }
@@ -54,14 +57,11 @@ public class SerieFormAdapter extends RecyclerView.Adapter<SerieFormAdapter.Seri
         for (int i = 0; i < series.size(); i++) {
             Serie serie = series.get(i);
             Serie updatedSerie = new Serie();
-            updatedSerie.setCarga(serie.getCarga());
-            updatedSerie.setRepeticoes(serie.getRepeticoes());
-
             RecyclerView.ViewHolder viewHolder = seriesRecyclerView.findViewHolderForAdapterPosition(i);
             if (viewHolder != null) {
                 View view = viewHolder.itemView;
-                TextInputEditText cargaInput = view.findViewById(R.id.serieCargaInput);
-                TextInputEditText repeticoesInput = view.findViewById(R.id.serieRepeticoesInput);
+                EditText cargaInput = view.findViewById(R.id.serieCargaInput);
+                EditText repeticoesInput = view.findViewById(R.id.serieRepeticoesInput);
                 updatedSerie.setCarga(cargaInput.getText().toString());
                 try {
                     updatedSerie.setRepeticoes(repeticoesInput.getText().toString());
@@ -82,11 +82,13 @@ public class SerieFormAdapter extends RecyclerView.Adapter<SerieFormAdapter.Seri
     }
 
     static class SerieViewHolder extends RecyclerView.ViewHolder {
-        TextInputEditText serieCargaInput;
-        TextInputEditText serieRepeticoesInput;
+        TextView serieNumero;
+        EditText serieCargaInput;
+        EditText serieRepeticoesInput;
 
         SerieViewHolder(@NonNull View itemView) {
             super(itemView);
+            serieNumero = itemView.findViewById(R.id.serieNumero);
             serieCargaInput = itemView.findViewById(R.id.serieCargaInput);
             serieRepeticoesInput = itemView.findViewById(R.id.serieRepeticoesInput);
         }

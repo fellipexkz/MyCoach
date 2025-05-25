@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -33,6 +34,15 @@ public class AlunoAdapter extends RecyclerView.Adapter<AlunoAdapter.AlunoViewHol
         Aluno aluno = alunos.get(position);
         holder.nomeTextView.setText(aluno.getNome());
         holder.emailTextView.setText(aluno.getEmail());
+
+        if (aluno.getNome() != null && !aluno.getNome().isEmpty()) {
+            holder.thumbnailInitialTextView.setText(aluno.getNome().substring(0, 1).toUpperCase());
+        } else {
+            holder.thumbnailInitialTextView.setText("?");
+        }
+
+        holder.thumbnailLayout.setClipToOutline(true);
+
         holder.itemView.setOnClickListener(v -> {
             if (onAlunoClickListener != null) {
                 onAlunoClickListener.accept(aluno);
@@ -54,11 +64,15 @@ public class AlunoAdapter extends RecyclerView.Adapter<AlunoAdapter.AlunoViewHol
     static class AlunoViewHolder extends RecyclerView.ViewHolder {
         TextView nomeTextView;
         TextView emailTextView;
+        TextView thumbnailInitialTextView;
+        RelativeLayout thumbnailLayout;
 
         AlunoViewHolder(@NonNull View itemView) {
             super(itemView);
             nomeTextView = itemView.findViewById(R.id.headline);
             emailTextView = itemView.findViewById(R.id.supportingText);
+            thumbnailInitialTextView = itemView.findViewById(R.id.thumbnailInitialTextView);
+            thumbnailLayout = itemView.findViewById(R.id.thumbnail);
         }
     }
 }

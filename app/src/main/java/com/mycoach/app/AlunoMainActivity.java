@@ -33,8 +33,9 @@ public class AlunoMainActivity extends AppCompatActivity {
         MaterialCardView manageStudentsCard = findViewById(R.id.verExerciciosCard);
         manageStudentsCard.setOnClickListener(v -> {
             int alunoId = getIntent().getIntExtra("aluno_id", -1);
-            Intent intent = new Intent(AlunoMainActivity.this, ExerciciosActivity.class);
+            Intent intent = new Intent(AlunoMainActivity.this, VisualizarTreinosActivity.class);
             intent.putExtra("aluno_id", alunoId);
+            intent.putExtra("is_aluno_flow", true);
             startActivity(intent);
         });
     }

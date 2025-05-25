@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataFirebase {
@@ -81,6 +82,20 @@ public class DataFirebase {
         });
     }
 
+    public void removeFirebaseTreino(int treinoId, String refDatabase) {
+        String[] parts = refDatabase.split("/");
+        if (parts.length > 1) {
+            String alunoIdStr = parts[parts.length - 2];
+            int alunoId = Integer.parseInt(alunoIdStr);
+            FirebaseDatabase.getInstance().getReference(refDatabase)
+                    .child(String.valueOf(treinoId))
+                    .removeValue()
+                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Treino removido com sucesso do Firebase: treinoId " + treinoId + ", alunoId " + alunoId))
+                    .addOnFailureListener(e -> Log.e("Firebase", "Erro ao remover treino do Firebase: " + e.getMessage()));
+        } else {
+            Log.e("Firebase", "Referência inválida para remoção: " + refDatabase);
+        }
+    }
 
     // Alunos
     public void syncWithFirebaseAluno(BancoDeDadosHelper bancoDeDadosHelper, String reference)
@@ -144,6 +159,15 @@ public class DataFirebase {
             }
         });
     }
+
+    public void removeFirebaseAluno(int alunoId, String refDatabase) {
+        FirebaseDatabase.getInstance().getReference(refDatabase)
+                .child(String.valueOf(alunoId))
+                .removeValue()
+                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Aluno removido com sucesso do Firebase: " + alunoId))
+                .addOnFailureListener(e -> Log.e("Firebase", "Erro ao remover aluno do Firebase: " + e.getMessage()));
+    }
+
     // Exercícios
     public void syncWithFirebaseExercise(BancoDeDadosHelper bancoDeDadosHelper, String reference)
     {
@@ -280,6 +304,86 @@ public class DataFirebase {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    public void removeTreinoComDependencias(int treinoId, String refTreinos) {
+        DatabaseReference treinosRef = FirebaseDatabase.getInstance().getReference(refTreinos);
+        treinosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot treinoSnapshot : dataSnapshot.getChildren()) {
+                    Treino treino = treinoSnapshot.getValue(Treino.class);
+                    if (treino != null && treino.getId() == treinoId) {
+                        String firebaseKey = treinoSnapshot.getKey();
+                        Log.d("Firebase", "Chave Firebase do treino encontrada: " + firebaseKey + " para treinoId: " + treinoId);
+
+                        DatabaseReference seriesRef = FirebaseDatabase.getInstance().getReference("series");
+                        seriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot seriesSnapshot) {
+                                List<String> seriesKeysToRemove = new ArrayList<>();
+                                for (DataSnapshot serieSnapshot : seriesSnapshot.getChildren()) {
+                                    Serie serie = serieSnapshot.getValue(Serie.class);
+                                    if (serie != null && treino.getExercicios() != null) {
+                                        for (Exercicio exercicio : treino.getExercicios()) {
+                                            if (serie.getExercicioId() == exercicio.getId()) {
+                                                seriesKeysToRemove.add(serieSnapshot.getKey());
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                for (String seriesKey : seriesKeysToRemove) {
+                                    seriesRef.child(seriesKey).removeValue()
+                                            .addOnSuccessListener(aVoid -> Log.d("Firebase", "Série removida: " + seriesKey))
+                                            .addOnFailureListener(e -> Log.e("Firebase", "Erro ao remover série: " + e.getMessage()));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e("Firebase", "Erro ao buscar séries: " + error.getMessage());
+                            }
+                        });
+
+                        DatabaseReference exerciciosRef = FirebaseDatabase.getInstance().getReference("exercicios");
+                        exerciciosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot exerciciosSnapshot) {
+                                List<String> exercicioKeysToRemove = new ArrayList<>();
+                                for (DataSnapshot exercicioSnapshot : exerciciosSnapshot.getChildren()) {
+                                    Exercicio exercicio = exercicioSnapshot.getValue(Exercicio.class);
+                                    if (exercicio != null && exercicio.getTreinoId() == treinoId) {
+                                        exercicioKeysToRemove.add(exercicioSnapshot.getKey());
+                                    }
+                                }
+                                for (String exercicioKey : exercicioKeysToRemove) {
+                                    exerciciosRef.child(exercicioKey).removeValue()
+                                            .addOnSuccessListener(aVoid -> Log.d("Firebase", "Exercício removido: " + exercicioKey))
+                                            .addOnFailureListener(e -> Log.e("Firebase", "Erro ao remover exercício: " + e.getMessage()));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e("Firebase", "Erro ao buscar exercícios: " + error.getMessage());
+                            }
+                        });
+
+                        treinosRef.child(firebaseKey).removeValue()
+                                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Treino removido com sucesso: " + firebaseKey))
+                                .addOnFailureListener(e -> Log.e("Firebase", "Erro ao remover treino: " + e.getMessage()));
+                        return;
+                    }
+                }
+                Log.e("Firebase", "Treino com ID " + treinoId + " não encontrado no Firebase");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Erro ao buscar treino: " + error.getMessage());
             }
         });
     }

@@ -2,10 +2,8 @@ package com.mycoach.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,7 +11,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailEditText, senhaEditText;
     private Button loginButton;
-    private TextView signUpTextView;
     private BancoDeDadosHelper bancoDeDadosHelper;
 
     @Override
@@ -24,7 +21,6 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.emailEditText);
         senhaEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
-        signUpTextView = findViewById(R.id.signUpTextView);
 
         bancoDeDadosHelper = new BancoDeDadosHelper(this);
 
@@ -60,11 +56,6 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(LoginActivity.this, "Email ou senha incorretos", Toast.LENGTH_SHORT).show();
             }
-        });
-
-        signUpTextView.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, CadastroActivity.class);
-            startActivity(intent);
         });
     }
 }

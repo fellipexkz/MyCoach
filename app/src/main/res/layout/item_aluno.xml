@@ -17,18 +17,24 @@
         android:paddingEnd="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/thumbnail"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/avatar_background"
-            android:src="@drawable/ic_person"
-            android:tint="@color/primary"
-            android:scaleType="centerInside"
-            android:padding="8dp"
             android:layout_marginEnd="16dp"
-            android:contentDescription="Avatar do aluno" />
+            android:background="@drawable/avatar_background"
+            android:contentDescription="Avatar do aluno">
+
+            <TextView
+                android:id="@+id/thumbnailInitialTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="A"
+                android:textColor="@color/primary"
+                android:textSize="20sp" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dp"

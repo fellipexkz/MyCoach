@@ -16,10 +16,11 @@ import java.util.List;
 public class GerenciarAlunosActivity extends AppCompatActivity {
 
     private RecyclerView alunosRecyclerView;
+    private TextView semAlunosTextView;
     private AlunoAdapter alunoAdapter;
     private BancoDeDadosHelper bancoDeDadosHelper;
     private List<Aluno> listaAlunos;
-    private TextView emptyView;
+    private static final int REQUEST_CODE_DETALHES_ALUNO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,20 +34,14 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        emptyView = new TextView(this);
-        emptyView.setText("Nenhum aluno encontrado");
-        emptyView.setTextColor(getResources().getColor(R.color.on_surface_variant));
-        emptyView.setTextSize(16);
-        emptyView.setPadding(16, 16, 16, 16);
-        emptyView.setVisibility(View.GONE);
-        ((androidx.coordinatorlayout.widget.CoordinatorLayout) findViewById(R.id.coordinator_layout)).addView(emptyView);
+        semAlunosTextView = findViewById(R.id.semAlunosTextView);
 
         alunosRecyclerView = findViewById(R.id.studentsRecyclerView);
         alunosRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         alunoAdapter = new AlunoAdapter(listaAlunos, aluno -> {
             Intent intent = new Intent(GerenciarAlunosActivity.this, DetalhesAlunoActivity.class);
             intent.putExtra("aluno_id", aluno.getId());
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_DETALHES_ALUNO);
         });
         alunosRecyclerView.setAdapter(alunoAdapter);
 
@@ -78,10 +73,20 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
 
         if (listaAlunos.isEmpty()) {
             alunosRecyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
+            semAlunosTextView.setVisibility(View.VISIBLE);
         } else {
             alunosRecyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
+            semAlunosTextView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_DETALHES_ALUNO && resultCode == RESULT_OK) {
+            if (data != null && data.getBooleanExtra("aluno_deletado", false)) {
+                carregarAlunos();
+            }
         }
     }
 }

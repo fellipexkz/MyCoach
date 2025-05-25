@@ -11,7 +11,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
-        android:fontFamily="@font/roboto"
         android:lineHeight="28dp"
         android:text="Bem vindo ao MyCoach!"
         android:textColor="@color/primary"
@@ -26,10 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Faça seu login ou crie uma conta."
+        android:text="Faça seu login para continuar."
         android:textColor="@android:color/black"
         android:textSize="14sp"
-        android:fontFamily="@font/roboto"
         android:textStyle="normal"
         android:lineHeight="20dp"
         android:letterSpacing="0.01"
@@ -69,6 +67,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emailTextInputLayout"
+        app:endIconMode="password_toggle"
         app:startIconDrawable="@drawable/ic_password">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -81,39 +80,17 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:id="@+id/buttonLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginButton"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="87dp"
+        android:layout_height="48dp"
         android:layout_marginTop="24dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.751"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordTextInputLayout">
-
-        <TextView
-            android:id="@+id/signUpTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="Criar conta"
-            android:textColor="@color/primary"
-            android:textSize="16sp"
-            android:fontFamily="@font/roboto"
-            android:textStyle="normal" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/loginButton"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="87dp"
-            android:layout_height="48dp"
-            android:text="Entrar"
-            android:textColor="@color/on_primary"
-            app:backgroundTint="@color/primary"
-            app:cornerRadius="100dp" />
-
-    </LinearLayout>
+        android:text="Entrar"
+        android:textColor="@color/on_primary"
+        app:backgroundTint="@color/primary"
+        app:cornerRadius="100dp"
+        app:layout_constraintEnd_toEndOf="@id/passwordTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@id/passwordTextInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
