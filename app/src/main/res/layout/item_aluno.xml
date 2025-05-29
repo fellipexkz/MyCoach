@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="@color/surface"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -15,7 +14,11 @@
         android:orientation="horizontal"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:baselineAligned="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <RelativeLayout
             android:id="@+id/thumbnail"
@@ -24,14 +27,14 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="16dp"
             android:background="@drawable/avatar_background"
-            android:contentDescription="Avatar do aluno">
+            android:contentDescription="@string/content_description_avatar_aluno">
 
             <TextView
                 android:id="@+id/thumbnailInitialTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="A"
+                android:text="@string/text_avatar_initial"
                 android:textColor="@color/primary"
                 android:textSize="20sp" />
         </RelativeLayout>
@@ -47,7 +50,7 @@
                 android:id="@+id/headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Aluno"
+                android:text="@string/text_aluno"
                 android:textColor="@color/on_surface"
                 android:textSize="16sp"
                 android:letterSpacing="0.03125"
@@ -57,14 +60,12 @@
                 android:id="@+id/supportingText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="aluno@email.com"
+                android:text="@string/text_aluno_email_exemplo"
                 android:textColor="@color/on_surface_variant"
                 android:textSize="14sp"
                 android:letterSpacing="0.01786"
                 android:lineHeight="20dp" />
-
         </LinearLayout>
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

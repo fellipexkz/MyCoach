@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText emailEditText, senhaEditText;
-    private Button loginButton;
     private BancoDeDadosHelper bancoDeDadosHelper;
 
     @Override
@@ -20,7 +19,7 @@ public class LoginActivity extends AppCompatActivity {
 
         emailEditText = findViewById(R.id.emailEditText);
         senhaEditText = findViewById(R.id.passwordEditText);
-        loginButton = findViewById(R.id.loginButton);
+        Button loginButton = findViewById(R.id.loginButton);
 
         bancoDeDadosHelper = new BancoDeDadosHelper(this);
 
@@ -35,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
             String senha = senhaEditText.getText().toString().trim();
 
             if (email.isEmpty() || senha.isEmpty()) {
-                Toast.makeText(LoginActivity.this, "Por favor, preencha todos os campos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.toast_fill_all_fields, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -51,10 +50,10 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Erro ao recuperar ID do aluno", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.toast_error_recover_client_id, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(LoginActivity.this, "Email ou senha incorretos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.toast_invalid_credentials, Toast.LENGTH_SHORT).show();
             }
         });
     }

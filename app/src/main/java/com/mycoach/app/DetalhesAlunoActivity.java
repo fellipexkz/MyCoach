@@ -3,8 +3,8 @@ package com.mycoach.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -12,10 +12,9 @@ import android.widget.RelativeLayout;
 
 public class DetalhesAlunoActivity extends AppCompatActivity {
 
-    private TextView nomeAlunoTextView, emailAlunoTextView, inicialAvatarTextView;
-    private MaterialButton visualizarTreinosButton, adicionarTreinoButton, deleteStudentButton;
+    private TextView nomeAlunoTextView;
     private BancoDeDadosHelper bancoDeDadosHelper;
-    private DataFirebase dbfire = new DataFirebase();
+    private final DataFirebase dbfire = new DataFirebase();
     private int alunoId;
 
     @Override
@@ -33,14 +32,21 @@ public class DetalhesAlunoActivity extends AppCompatActivity {
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
 
         nomeAlunoTextView = findViewById(R.id.studentNameTextView);
-        emailAlunoTextView = findViewById(R.id.studentEmailTextView);
-        inicialAvatarTextView = findViewById(R.id.avatarInitialTextView);
-        visualizarTreinosButton = findViewById(R.id.viewWorkoutsButton);
-        adicionarTreinoButton = findViewById(R.id.addWorkoutButton);
-        deleteStudentButton = findViewById(R.id.deleteStudentButton);
+        TextView emailAlunoTextView = findViewById(R.id.studentEmailTextView);
+        TextView inicialAvatarTextView = findViewById(R.id.avatarInitialTextView);
+        MaterialButton visualizarTreinosButton = findViewById(R.id.viewWorkoutsButton);
+        MaterialButton adicionarTreinoButton = findViewById(R.id.addWorkoutButton);
+        MaterialButton deleteStudentButton = findViewById(R.id.deleteStudentButton);
 
         RelativeLayout avatarLayout = findViewById(R.id.avatar);
         avatarLayout.setClipToOutline(true);
@@ -68,11 +74,10 @@ public class DetalhesAlunoActivity extends AppCompatActivity {
 
         deleteStudentButton.setOnClickListener(v ->
                 new MaterialAlertDialogBuilder(this)
-                        .setTitle("Confirmar Exclusão")
-                        .setMessage("Tem certeza que deseja excluir o aluno " + nomeAlunoTextView.getText() + "?")
-                        .setPositiveButton("Confirmar", (dialog, which) -> {
-                            bancoDeDadosHelper.deletarAluno(alunoId);
-                            dbfire.removeFirebaseAluno(alunoId, "alunos");
+                        .setTitle(R.string.dialog_delete_title)
+                        .setMessage(getString(R.string.dialog_delete_message, nomeAlunoTextView.getText()))
+                        .setPositiveButton(R.string.button_excluir_aluno, (dialog, which) -> {
+                            dbfire.removeFirebaseAluno(alunoId, "alunos", bancoDeDadosHelper);
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("aluno_deletado", true);
                             setResult(RESULT_OK, resultIntent);

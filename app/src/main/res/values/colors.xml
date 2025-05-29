@@ -15,8 +15,5 @@
     <color name="outline_variant">#C4C6CF</color>
     <color name="error">#BA1A1A</color>
     <color name="on_error">#FFFFFF</color>
-    <color name="surface_container_lowest">#FFFFFF</color>
-    <color name="surface_container_low">#F3F3FA</color>
     <color name="surface_container">#EDEDF4</color>
-    <color name="surface_container_high">#E7E8EE</color>
 </resources>

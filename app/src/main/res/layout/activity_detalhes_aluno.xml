@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/background">
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -13,7 +12,7 @@
         android:background="@color/primary_container"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_back"
-        app:title="Detalhes do Aluno"
+        app:title="@string/title_detalhes_aluno"
         app:titleTextColor="@color/on_primary_container" />
 
     <com.google.android.material.card.MaterialCardView
@@ -23,7 +22,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="200dp"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="?attr/colorSurface"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:strokeColor="@color/outline_variant"
@@ -44,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:gravity="center"
-                android:text="Nome do Aluno"
+                android:text="@string/text_nome_aluno"
                 android:textColor="@color/on_surface"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="email@exemplo.com"
+                android:text="@string/text_email_exemplo"
                 android:textColor="@color/on_surface_variant"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="A"
+                    android:text="@string/text_avatar_initial"
                     android:textColor="@color/primary"
                     android:textSize="48sp" />
             </RelativeLayout>
@@ -87,7 +86,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/viewWorkoutsButton"
                 style="@style/Widget.Material3.Button"
-                android:layout_width="0dp"
+                android:layout_width="220dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="16dp"
@@ -97,7 +96,7 @@
                 app:icon="@drawable/ic_visibility"
                 app:iconPadding="8dp"
                 app:iconTint="@color/on_primary"
-                android:text="Ver exercícios definidos ao Usuário"
+                android:text="@string/button_ver_exercicios_usuario"
                 android:textColor="@color/on_primary"
                 android:textSize="15sp"
                 app:backgroundTint="@color/primary"
@@ -109,7 +108,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/addWorkoutButton"
                 style="@style/Widget.Material3.Button"
-                android:layout_width="0dp"
+                android:layout_width="220dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
@@ -120,7 +119,7 @@
                 app:icon="@drawable/ic_add"
                 app:iconPadding="8dp"
                 app:iconTint="@color/on_primary"
-                android:text="Adicionar um exercício ao Usuário"
+                android:text="@string/button_adicionar_exercicio_usuario"
                 android:textColor="@color/on_primary"
                 android:textSize="15sp"
                 app:backgroundTint="@color/primary"
@@ -141,7 +140,7 @@
         app:icon="@drawable/ic_delete"
         app:iconPadding="8dp"
         app:iconTint="@color/error"
-        android:text="Excluir Aluno"
+        android:text="@string/button_excluir_aluno"
         android:textColor="@color/error"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"

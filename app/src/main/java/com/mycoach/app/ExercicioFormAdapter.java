@@ -24,11 +24,11 @@ import java.util.List;
 public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdapter.ExercicioViewHolder> {
 
     private static final String TAG = "ExercicioFormAdapter";
-    private List<Exercicio> exercicios;
+    private final List<Exercicio> exercicios;
     private RecyclerView exerciciosRecyclerView;
-    private NestedScrollView nestedScrollView;
-    private FragmentManager fragmentManager;
-    private List<List<EditText>> cargaEditTextMatrix = new ArrayList<>();
+    private final NestedScrollView nestedScrollView;
+    private final FragmentManager fragmentManager;
+    private final List<List<EditText>> cargaEditTextMatrix = new ArrayList<>();
 
     public ExercicioFormAdapter(FragmentManager fragmentManager, NestedScrollView nestedScrollView) {
         this.exercicios = new ArrayList<>();
@@ -115,13 +115,13 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                 return false;
             });
         } else {
-            boolean isLastExerciseOverall = (currentExerciseHolder.getAdapterPosition() == exercicios.size() - 1);
+            boolean isLastExerciseOverall = (currentExerciseHolder.getBindingAdapterPosition() == exercicios.size() - 1);
 
             if (!isLastExerciseOverall) {
                 repeticoesInput.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                 repeticoesInput.setOnEditorActionListener((v, actionId, event) -> {
                     if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                        int nextExercisePosition = currentExerciseHolder.getAdapterPosition() + 1;
+                        int nextExercisePosition = currentExerciseHolder.getBindingAdapterPosition() + 1;
                         if (exerciciosRecyclerView != null) {
                             exerciciosRecyclerView.smoothScrollToPosition(nextExercisePosition);
                             exerciciosRecyclerView.postDelayed(() -> {
@@ -176,7 +176,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
             InputMethodManager imm = (InputMethodManager) holder.itemView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) imm.showSoftInput(holder.exercicioNomeInput, InputMethodManager.SHOW_IMPLICIT);
             scrollToView(holder.exercicioNomeInput);
-            Log.d(TAG, "exercicioNomeInput clicado na posição " + holder.getAdapterPosition());
+            Log.d(TAG, "exercicioNomeInput clicado na posição " + holder.getBindingAdapterPosition());
         });
 
         if (exercicio.getSeries().isEmpty()) {
@@ -218,12 +218,26 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
         }
 
         String tempoDescanso = exercicio.getTempoDescanso();
-        holder.tempoDescansoText.setText("Tempo de Descanso: " + (tempoDescanso == null || tempoDescanso.isEmpty() ? "Desativado" : tempoDescanso));
+        holder.tempoDescansoText.setText(String.format(
+                holder.itemView.getContext().getResources().getString(R.string.tempo_descanso_format),
+                tempoDescanso == null || tempoDescanso.isEmpty() ?
+                        holder.itemView.getContext().getResources().getString(R.string.tempo_descanso_desativado) :
+                        tempoDescanso
+        ));
+
         holder.tempoDescansoContainer.setOnClickListener(view -> {
-            int currentPosition = holder.getAdapterPosition();
+            int currentPosition = holder.getBindingAdapterPosition();
             if (currentPosition != RecyclerView.NO_POSITION && fragmentManager != null) {
-                String exerciseName = exercicio.getNome().isEmpty() ? "Exercício " + (currentPosition + 1) : exercicio.getNome();
-                RestTimeBottomSheetFragment bottomSheet = RestTimeBottomSheetFragment.newInstance(currentPosition, exerciseName, this);
+                Exercicio exercicioAtual = exercicios.get(currentPosition);
+                String exerciseName = exercicioAtual.getNome().isEmpty() ? null : exercicioAtual.getNome();
+                String currentRestTime = exercicioAtual.getTempoDescanso();
+
+                RestTimeBottomSheetFragment bottomSheet = RestTimeBottomSheetFragment.newInstance(
+                        currentPosition,
+                        exerciseName,
+                        currentRestTime,
+                        this
+                );
                 bottomSheet.show(fragmentManager, "RestTimeBottomSheet");
             }
         });
@@ -262,7 +276,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
                 @Override public void afterTextChanged(Editable s) {
-                    int adapterPosition = holder.getAdapterPosition();
+                    int adapterPosition = holder.getBindingAdapterPosition();
                     if (adapterPosition != RecyclerView.NO_POSITION && seriePosition < exercicios.get(adapterPosition).getSeries().size()) {
                         exercicios.get(adapterPosition).getSeries().get(seriePosition).setCarga(s.toString());
                     }
@@ -272,7 +286,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
                 @Override public void afterTextChanged(Editable s) {
-                    int adapterPosition = holder.getAdapterPosition();
+                    int adapterPosition = holder.getBindingAdapterPosition();
                     if (adapterPosition != RecyclerView.NO_POSITION && seriePosition < exercicios.get(adapterPosition).getSeries().size()) {
                         exercicios.get(adapterPosition).getSeries().get(seriePosition).setRepeticoes(s.toString());
                     }
@@ -283,7 +297,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                 serieCargaInput.setFocusable(true);
                 serieCargaInput.setFocusableInTouchMode(true);
                 serieCargaInput.requestFocus();
-                int currentPosition = holder.getAdapterPosition();
+                int currentPosition = holder.getBindingAdapterPosition();
                 if (exerciciosRecyclerView != null && currentPosition != RecyclerView.NO_POSITION) {
                     exerciciosRecyclerView.smoothScrollToPosition(currentPosition);
                 }
@@ -295,7 +309,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                 serieRepeticoesInput.setFocusable(true);
                 serieRepeticoesInput.setFocusableInTouchMode(true);
                 serieRepeticoesInput.requestFocus();
-                int currentPosition = holder.getAdapterPosition();
+                int currentPosition = holder.getBindingAdapterPosition();
                 if (exerciciosRecyclerView != null && currentPosition != RecyclerView.NO_POSITION) {
                     exerciciosRecyclerView.smoothScrollToPosition(currentPosition);
                 }
@@ -312,7 +326,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
         }
 
         holder.adicionarSerieButton.setOnClickListener(view -> {
-            int currentExerciseAdapterPos = holder.getAdapterPosition();
+            int currentExerciseAdapterPos = holder.getBindingAdapterPosition();
             if (currentExerciseAdapterPos == RecyclerView.NO_POSITION) return;
 
             Exercicio currentExercicio = exercicios.get(currentExerciseAdapterPos);
@@ -343,7 +357,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
                 @Override public void afterTextChanged(Editable s) {
-                    int adapterPos = holder.getAdapterPosition();
+                    int adapterPos = holder.getBindingAdapterPosition();
                     if (adapterPos != RecyclerView.NO_POSITION &&
                             novaSeriePositionInExercise < exercicios.get(adapterPos).getSeries().size()) {
                         exercicios.get(adapterPos).getSeries().get(novaSeriePositionInExercise).setCarga(s.toString());
@@ -354,7 +368,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
                 @Override public void afterTextChanged(Editable s) {
-                    int adapterPos = holder.getAdapterPosition();
+                    int adapterPos = holder.getBindingAdapterPosition();
                     if (adapterPos != RecyclerView.NO_POSITION &&
                             novaSeriePositionInExercise < exercicios.get(adapterPos).getSeries().size()) {
                         exercicios.get(adapterPos).getSeries().get(novaSeriePositionInExercise).setRepeticoes(s.toString());
@@ -366,7 +380,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                 serieCargaInput.setFocusable(true);
                 serieCargaInput.setFocusableInTouchMode(true);
                 serieCargaInput.requestFocus();
-                int currentPosition = holder.getAdapterPosition();
+                int currentPosition = holder.getBindingAdapterPosition();
                 if (exerciciosRecyclerView != null && currentPosition != RecyclerView.NO_POSITION) {
                     exerciciosRecyclerView.smoothScrollToPosition(currentPosition);
                 }
@@ -378,7 +392,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                 serieRepeticoesInput.setFocusable(true);
                 serieRepeticoesInput.setFocusableInTouchMode(true);
                 serieRepeticoesInput.requestFocus();
-                int currentPosition = holder.getAdapterPosition();
+                int currentPosition = holder.getBindingAdapterPosition();
                 if (exerciciosRecyclerView != null && currentPosition != RecyclerView.NO_POSITION) {
                     exerciciosRecyclerView.smoothScrollToPosition(currentPosition);
                 }
@@ -408,7 +422,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
             scrollToView(serieView);
         });
 
-        if (holder.getAdapterPosition() == getItemCount() - 1) {
+        if (holder.getBindingAdapterPosition() == getItemCount() - 1) {
             holder.adicionarExercicioButton.setVisibility(View.VISIBLE);
         } else {
             holder.adicionarExercicioButton.setVisibility(View.GONE);
@@ -506,13 +520,13 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
         }
     }
 
-    static class ExercicioViewHolder extends RecyclerView.ViewHolder {
-        TextInputEditText exercicioNomeInput;
-        LinearLayout tempoDescansoContainer;
-        TextView tempoDescansoText;
-        LinearLayout seriesContainer;
-        com.google.android.material.button.MaterialButton adicionarSerieButton;
-        com.google.android.material.button.MaterialButton adicionarExercicioButton;
+    public static class ExercicioViewHolder extends RecyclerView.ViewHolder {
+        final TextInputEditText exercicioNomeInput;
+        final LinearLayout tempoDescansoContainer;
+        final TextView tempoDescansoText;
+        final LinearLayout seriesContainer;
+        final com.google.android.material.button.MaterialButton adicionarSerieButton;
+        final com.google.android.material.button.MaterialButton adicionarExercicioButton;
         private final TextWatcher nomeWatcher;
 
         ExercicioViewHolder(@NonNull View itemView, ExercicioFormAdapter adapter) {
@@ -531,7 +545,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
                 @Override public void afterTextChanged(Editable s) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         if (adapter != null && position < adapter.exercicios.size()) {
                             adapter.exercicios.get(position).setNome(s.toString());

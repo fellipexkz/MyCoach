@@ -13,17 +13,17 @@
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:background="@android:color/darker_gray"
-        android:backgroundTint="@android:color/darker_gray" />
+        android:background="?attr/colorOutline"
+        android:backgroundTint="?attr/colorOutline" />
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tempo de Descanso"
+        android:text="@string/title_tempo_descanso"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/colorOnSurface"
         android:gravity="center"
         android:layout_marginBottom="4dp" />
 
@@ -31,9 +31,9 @@
         android:id="@+id/subtitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nome do Exercício"
+        android:text="@string/text_nome_exercicio"
         android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="?attr/colorOnSurfaceVariant"
         android:gravity="center"
         android:layout_marginBottom="16dp" />
 
@@ -44,19 +44,18 @@
         app:wheel_visible_item_count="5"
         app:wheel_atmospheric="true"
         app:wheel_item_text_size="18sp"
-        app:wheel_item_text_color="@android:color/darker_gray"
-        app:wheel_selected_item_text_color="@android:color/black"
+        app:wheel_item_text_color="?attr/colorOnSurfaceVariant"
+        app:wheel_selected_item_text_color="?attr/colorOnSurface"
         app:wheel_indicator="true"
-        app:wheel_indicator_color="@android:color/black"
+        app:wheel_indicator_color="?attr/colorOnSurface"
         app:wheel_curtain="false"
-        app:wheel_curtain_color="@color/outline"
-        />
+        app:wheel_curtain_color="@color/outline" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/confirmButton"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Confirmar"
+        android:text="@string/botao_confirmar"
         android:textColor="@color/on_primary"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"

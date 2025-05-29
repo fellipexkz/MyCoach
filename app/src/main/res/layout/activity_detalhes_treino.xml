@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/background">
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -20,7 +19,7 @@
             android:background="@color/primary_container"
             app:navigationIcon="@drawable/ic_back"
             app:menu="@menu/toolbar_menu"
-            app:title="Detalhes do Treino"
+            app:title="@string/title_detalhes_treino"
             app:titleTextColor="@color/on_primary_container"
             app:layout_scrollFlags="scroll|enterAlways|snap" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -76,7 +75,7 @@
                 android:id="@+id/exerciciosLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Exercícios"
+                android:text="@string/label_exercicios"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/on_surface"

@@ -24,7 +24,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_dumbbell"
-            android:contentDescription="Ícone de exercício"
+            android:contentDescription="@string/content_description_exercicio_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/exercicioNomeLabel"
             app:layout_constraintBottom_toBottomOf="@id/exercicioNomeLabel"
@@ -35,7 +35,7 @@
             android:id="@+id/exercicioNomeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exercício:"
+            android:text="@string/label_exercicio"
             android:textSize="16sp"
             android:textColor="@color/on_surface"
             app:layout_constraintStart_toEndOf="@id/exercicioIcon"
@@ -61,7 +61,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_timer"
-            android:contentDescription="Ícone de tempo de descanso"
+            android:contentDescription="@string/content_description_tempo_descanso_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/tempoDescansoLabel"
             app:layout_constraintBottom_toBottomOf="@id/tempoDescansoLabel"
@@ -72,12 +72,11 @@
             android:id="@+id/tempoDescansoLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tempo de descanso:"
+            android:text="@string/label_tempo_descanso"
             android:textSize="14sp"
             android:textColor="@color/on_surface"
             app:layout_constraintStart_toEndOf="@id/tempoDescansoIcon"
-            app:layout_constraintTop_toBottomOf="@id/exercicioIcon"
-            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@id/exercicioIcon" android:layout_marginStart="8dp"
             android:layout_marginTop="12dp" />
 
         <TextView
@@ -94,8 +93,8 @@
             app:layout_constraintBottom_toBottomOf="@id/tempoDescansoLabel"
             android:layout_marginEnd="16dp" />
 
-        <TableLayout
-            android:id="@+id/seriesTable"
+        <LinearLayout
+            android:id="@+id/seriesHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tempoDescansoLabel"
@@ -103,35 +102,39 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            android:padding="4dp">
 
-            <TableRow
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:padding="4dp">
+                android:layout_weight="1"
+                android:text="@string/label_serie"
+                android:textColor="@color/on_surface"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="SÉRIE"
-                    android:textColor="@color/on_surface"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:gravity="center" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/label_peso_repeticoes"
+                android:textColor="@color/on_surface"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="PESO &amp; REPETIÇÕES"
-                    android:textColor="@color/on_surface"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:gravity="center" />
-            </TableRow>
-        </TableLayout>
+        <LinearLayout
+            android:id="@+id/seriesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/seriesHeader"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp" android:layout_marginEnd="16dp"   android:orientation="vertical" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

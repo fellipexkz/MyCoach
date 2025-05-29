@@ -4,8 +4,7 @@
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/background">
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -18,7 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary_container"
             app:navigationIcon="@drawable/ic_back"
-            app:title="Alunos"
+            app:title="@string/title_alunos"
             app:titleTextColor="@color/on_primary_container" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -33,7 +32,7 @@
         android:id="@+id/semAlunosTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nenhum aluno cadastrado"
+        android:text="@string/text_sem_alunos"
         android:textSize="18sp"
         android:textColor="@color/on_surface"
         android:visibility="gone"
@@ -47,7 +46,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:backgroundTint="@color/primary"
-        android:text="Adicionar aluno"
+        android:text="@string/button_adicionar_aluno"
         android:textColor="@color/on_primary"
         app:icon="@drawable/ic_add"
         app:iconTint="@color/on_primary"

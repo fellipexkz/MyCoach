@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +23,7 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
     private AlunoAdapter alunoAdapter;
     private BancoDeDadosHelper bancoDeDadosHelper;
     private List<Aluno> listaAlunos;
-    private static final int REQUEST_CODE_DETALHES_ALUNO = 1;
+    private ActivityResultLauncher<Intent> detalhesAlunoLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +33,28 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
         bancoDeDadosHelper = new BancoDeDadosHelper(this);
         listaAlunos = new ArrayList<>();
 
+        detalhesAlunoLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null && data.getBooleanExtra("aluno_deletado", false)) {
+                            carregarAlunos();
+                        }
+                    }
+                }
+        );
+
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
 
         semAlunosTextView = findViewById(R.id.semAlunosTextView);
 
@@ -41,7 +63,7 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
         alunoAdapter = new AlunoAdapter(listaAlunos, aluno -> {
             Intent intent = new Intent(GerenciarAlunosActivity.this, DetalhesAlunoActivity.class);
             intent.putExtra("aluno_id", aluno.getId());
-            startActivityForResult(intent, REQUEST_CODE_DETALHES_ALUNO);
+            detalhesAlunoLauncher.launch(intent);
         });
         alunosRecyclerView.setAdapter(alunoAdapter);
 
@@ -77,16 +99,6 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
         } else {
             alunosRecyclerView.setVisibility(View.VISIBLE);
             semAlunosTextView.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_DETALHES_ALUNO && resultCode == RESULT_OK) {
-            if (data != null && data.getBooleanExtra("aluno_deletado", false)) {
-                carregarAlunos();
-            }
         }
     }
 }

@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/background">
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -13,7 +12,7 @@
         android:background="@color/primary_container"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/toolbar_menu_aluno"
-        app:title="Bem-vindo"
+        app:title="@string/title_bem_vindo"
         app:titleTextColor="@color/on_primary_container" />
 
     <com.google.android.material.card.MaterialCardView
@@ -50,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:letterSpacing="0.009375"
                     android:lineHeight="24dp"
-                    android:text="Ver exercícios"
+                    android:text="@string/text_ver_exercicios"
                     android:textColor="@color/on_surface"
                     android:textSize="16sp"
                     android:textStyle="normal|bold" />
@@ -62,7 +61,7 @@
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/card_aluno"
-                android:contentDescription="Imagem de duas pessoas treinando na academia, realizando agachamento com barra, promovendo exercícios físicos"
+                android:contentDescription="@string/content_description_card_aluno"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

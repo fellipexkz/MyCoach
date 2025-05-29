@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/background">
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -19,7 +18,7 @@
             android:background="@color/primary_container"
             app:layout_scrollFlags="scroll|enterAlways"
             app:navigationIcon="@drawable/ic_back"
-            app:title="Adicionar Treino"
+            app:title="@string/title_adicionar_treino"
             app:titleTextColor="@color/on_primary_container"
             app:menu="@menu/save_menu" />
 
@@ -66,7 +65,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:hint="Título do Treino" />
+                        android:hint="@string/hint_titulo_treino" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -86,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
                         android:lines="3"
-                        android:hint="Observação (opcional)" />
+                        android:hint="@string/hint_observacao_opcional" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -96,7 +95,7 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    android:hint="Dia da Semana"
+                    android:hint="@string/hint_dia_semana"
                     app:layout_constraintTop_toBottomOf="@id/treinoObservacaoLayout"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -118,7 +117,7 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    android:text="Exercícios"
+                    android:text="@string/label_exercicios"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/on_surface"

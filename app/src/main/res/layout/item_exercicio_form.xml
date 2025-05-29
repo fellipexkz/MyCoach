@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/surface"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp">
 
@@ -15,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:hintEnabled="true"
-        android:hint="Nome do Exercício">
+        android:hint="@string/hint_exercicio_nome">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/exercicioNomeInput"
@@ -41,7 +40,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:contentDescription="Ícone de relógio para ajustar o tempo de descanso entre exercícios"
+            android:contentDescription="@string/content_description_timer_icon"
             android:src="@drawable/ic_timer"
             app:tint="?attr/colorPrimary" />
 
@@ -50,55 +49,51 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Tempo de Descanso: 1min 0s"
+            android:text="@string/text_tempo_descanso_default"
             android:textSize="16sp"
             android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:textColor="?attr/colorPrimary" />
     </LinearLayout>
 
-    <TableLayout
+    <LinearLayout
         android:id="@+id/seriesHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tempoDescansoContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:padding="4dp">
 
-        <TableRow
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:padding="4dp">
+            android:layout_weight="1"
+            android:text="@string/label_serie"
+            android:textColor="@color/on_surface"
+            android:textSize="14sp"
+            android:gravity="center" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="SÉRIE"
-                android:textColor="@color/on_surface"
-                android:textSize="14sp"
-                android:gravity="center" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_kg"
+            android:textColor="@color/on_surface"
+            android:textSize="14sp"
+            android:gravity="center" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="KG"
-                android:textColor="@color/on_surface"
-                android:textSize="14sp"
-                android:gravity="center" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="REPS"
-                android:textColor="@color/on_surface"
-                android:textSize="14sp"
-                android:gravity="center" />
-        </TableRow>
-    </TableLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_reps"
+            android:textColor="@color/on_surface"
+            android:textSize="14sp"
+            android:gravity="center" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/seriesContainer"
@@ -114,7 +109,7 @@
         android:id="@+id/adicionarSerieButton"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Adicionar Série"
+        android:text="@string/button_adicionar_serie"
         style="@style/Widget.Material3.Button.OutlinedButton"
         app:layout_constraintTop_toBottomOf="@id/seriesContainer"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,7 +120,7 @@
         android:id="@+id/adicionarExercicioButton"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Adicionar Exercício"
+        android:text="@string/button_adicionar_exercicio"
         app:layout_constraintTop_toBottomOf="@id/adicionarSerieButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

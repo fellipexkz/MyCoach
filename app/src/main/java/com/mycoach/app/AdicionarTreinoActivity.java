@@ -11,7 +11,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.Arrays;
 import java.util.List;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,21 +29,9 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
     private TextInputEditText treinoObservacaoInput;
     private MaterialAutoCompleteTextView treinoDiaSemanaInput;
     private RecyclerView exerciciosRecyclerView;
-    private NestedScrollView nestedScrollView;
-    private AppBarLayout appBarLayout;
-    private MaterialToolbar toolbar;
-    private TextView exerciciosLabel;
     private ExercicioFormAdapter exercicioAdapter;
     private BancoDeDadosHelper bancoDeDadosHelper;
-    private DataFirebase dbfire = new DataFirebase();
-
-    private boolean paro = false;
-    private boolean checkout_val = false;
-
-    private static final String[] DIAS_SEMANA = {
-            "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira",
-            "Sexta-feira", "Sábado", "Domingo"
-    };
+    private final DataFirebase dbfire = new DataFirebase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,31 +40,40 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
 
         bancoDeDadosHelper = new BancoDeDadosHelper(this);
 
-        toolbar = findViewById(R.id.toolbar);
+        String[] diasSemana = getResources().getStringArray(R.array.dias_semana);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar == null) {
             Log.e("AdicionarTreino", "Toolbar não encontrada!");
         }
         setSupportActionBar(toolbar);
         if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(v -> onBackPressed());
+            toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         } else {
             Log.e("AdicionarTreino", "Não foi possível configurar o navigation listener!");
         }
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
 
         treinoNomeInput = findViewById(R.id.treinoNomeInput);
         treinoObservacaoInput = findViewById(R.id.treinoObservacaoInput);
         treinoDiaSemanaInput = findViewById(R.id.treinoDiaSemanaInput);
         exerciciosRecyclerView = findViewById(R.id.exerciciosRecyclerView);
-        nestedScrollView = findViewById(R.id.nestedScrollView);
-        appBarLayout = findViewById(R.id.appBarLayout);
-        exerciciosLabel = findViewById(R.id.exerciciosLabel);
+        NestedScrollView nestedScrollView = findViewById(R.id.nestedScrollView);
+        AppBarLayout appBarLayout = findViewById(R.id.appBarLayout);
+        TextView exerciciosLabel = findViewById(R.id.exerciciosLabel);
         if (exerciciosLabel == null) {
             Log.e("AdicionarTreino", "exerciciosLabel não encontrada!");
         }
 
         if (treinoNomeInput == null || treinoObservacaoInput == null || treinoDiaSemanaInput == null ||
                 exerciciosRecyclerView == null || nestedScrollView == null || appBarLayout == null) {
-            Toast.makeText(this, "Erro: Componentes do layout não encontrados", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_layout_error, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -89,7 +88,7 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
         ArrayAdapter<String> diasSemanaAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_dropdown_item_1line,
-                DIAS_SEMANA
+                diasSemana
         );
         treinoDiaSemanaInput.setAdapter(diasSemanaAdapter);
 
@@ -247,7 +246,7 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
 
         int alunoId = getIntent().getIntExtra("aluno_id", -1);
         if (alunoId == -1) {
-            Toast.makeText(this, "Erro: ID do aluno não fornecido", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_error_client_id, Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -278,76 +277,81 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
 
     private void salvarTreino() {
         Treino treino = new Treino();
-        String nome = treinoNomeInput.getText().toString().trim();
-        String observacao = treinoObservacaoInput.getText().toString().trim();
-        String diaSemana = treinoDiaSemanaInput.getText().toString().trim();
+        String nome = treinoNomeInput.getText() != null ? treinoNomeInput.getText().toString().trim() : "";
+        String observacao = treinoObservacaoInput.getText() != null ? treinoObservacaoInput.getText().toString().trim() : "";
+        String diaSemanaTexto = treinoDiaSemanaInput.getText() != null ? treinoDiaSemanaInput.getText().toString().trim() : "";
 
         if (nome.isEmpty()) {
-            treinoNomeInput.setError("O título é obrigatório");
+            treinoNomeInput.setError(getString(R.string.error_title_required));
             return;
         }
 
-        if (diaSemana.isEmpty()) {
-            Toast.makeText(this, "Selecione um dia da semana", Toast.LENGTH_SHORT).show();
+        if (diaSemanaTexto.isEmpty()) {
+            Toast.makeText(this, R.string.toast_select_day, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] diasSemana = getResources().getStringArray(R.array.dias_semana);
+        int diaSemanaIndex = Arrays.asList(diasSemana).indexOf(diaSemanaTexto);
+        if (diaSemanaIndex == -1) {
+            Toast.makeText(this, R.string.toast_invalid_day, Toast.LENGTH_SHORT).show();
             return;
         }
 
         int alunoId = getIntent().getIntExtra("aluno_id", -1);
         if (alunoId == -1) {
-            Toast.makeText(this, "Erro: ID do aluno não fornecido", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_error_client_id, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        long treinoId = bancoDeDadosHelper.adicionarTreino(alunoId, nome, observacao.isEmpty() ? null : observacao, diaSemana);
+        long treinoId = bancoDeDadosHelper.adicionarTreino(alunoId, nome, observacao.isEmpty() ? null : observacao, diaSemanaIndex);
         if (treinoId == -1) {
-            Toast.makeText(this, "Erro ao adicionar treino", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_error_add_training, Toast.LENGTH_SHORT).show();
             return;
         }
 
         List<Treino> treinos = bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId);
         if (treinos.isEmpty() || treinos.get(treinos.size() - 1).getId() != treinoId) {
-            Toast.makeText(this, "Erro ao recuperar ID do treino", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_error_recover_training_id, Toast.LENGTH_SHORT).show();
             return;
         }
 
         Log.d("AdicionarTreinoActivity", "Treino salvo - ID: " + treinoId + ", Nome: " + nome);
         treino.setId((int)treinoId);
+        treino.setDiaSemanaIndex(diaSemanaIndex);
 
         for (Exercicio exercicio : exercicioAdapter.getExercicios()) {
             String exercicioNome = exercicio.getNome().trim();
             String tempoDescanso = exercicio.getTempoDescanso().trim();
 
             if (exercicioNome.isEmpty() || tempoDescanso.isEmpty()) {
-                Toast.makeText(this, "Preencha todos os campos dos exercícios", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_fill_exercise_fields, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             long exercicioId = bancoDeDadosHelper.adicionarExercicio((int) treinoId, exercicioNome, tempoDescanso);
             if (exercicioId == -1) {
-                Toast.makeText(this, "Erro ao adicionar exercício", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_error_add_exercise, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             Log.d("AdicionarTreinoActivity", "Exercício salvo - ID: " + exercicioId + ", Nome: " + exercicioNome + ", Tempo Descanso: " + tempoDescanso);
 
-            checkout_val = false;
-            paro = false;
-
             for (Serie serieParaValidar : exercicio.getSeries()) {
                 String cargaVal = serieParaValidar.getCarga().trim();
                 String repeticoesVal = serieParaValidar.getRepeticoes().trim();
                 if (cargaVal.isEmpty() || repeticoesVal.isEmpty()) {
-                    Toast.makeText(this, "Preencha todos os campos das séries", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.toast_fill_series_fields, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 try {
                     int repeticoesIntVal = Integer.parseInt(repeticoesVal);
                     if (repeticoesIntVal <= 0) {
-                        Toast.makeText(this, "O número de repetições deve ser maior que 0", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.toast_invalid_repetitions, Toast.LENGTH_SHORT).show();
                         return;
                     }
                 } catch (NumberFormatException e) {
-                    Toast.makeText(this, "O número de repetições deve ser um valor numérico válido", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.toast_invalid_numeric_repetitions, Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -359,7 +363,7 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
 
                 long serieId = bancoDeDadosHelper.adicionarSerie((int) exercicioId, carga, repeticoesInt);
                 if (serieId == -1) {
-                    Toast.makeText(this, "Erro ao adicionar série", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.toast_error_add_series, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 serie.setCarga(carga);
@@ -376,11 +380,10 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
             dbfire.sendFirebaseExercise(exercicio, "exercicios", bancoDeDadosHelper);
         }
 
-        Toast.makeText(this, "Treino adicionado com sucesso", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.toast_training_added, Toast.LENGTH_SHORT).show();
 
         treino.setAlunoId(alunoId);
         treino.setObservacao(observacao.isEmpty() ? null : observacao);
-        treino.setDiaSemana(diaSemana);
         treino.setNome(nome);
         dbfire.sendFirebaseTreino(treino, "treinos", bancoDeDadosHelper);
 
@@ -393,7 +396,7 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
         intent.putExtra("aluno_id", alunoId);
         intent.putExtra("treino_nome", nome);
         intent.putExtra("treino_observacao", observacao.isEmpty() ? null : observacao);
-        intent.putExtra("treino_dia_semana", diaSemana);
+        intent.putExtra("treino_dia_semana_index", diaSemanaIndex);
         startActivity(intent);
         finish();
     }

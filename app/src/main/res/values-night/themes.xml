@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.MyCoach" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.MyCoach" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/on_primary</item>
         <item name="colorPrimaryContainer">@color/primary_container</item>
@@ -15,14 +15,14 @@
         <item name="colorError">@color/error</item>
         <item name="colorOnError">@color/on_error</item>
         <item name="android:statusBarColor">@color/primary_container</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:navigationBarColor">@color/surface</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowLightNavigationBar">false</item>
         <item name="actionMenuTextColor">?colorOnPrimaryContainer</item>
     </style>
 
     <style name="Theme.MyCoach.Login" parent="Theme.MyCoach">
         <item name="android:statusBarColor">@color/background</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

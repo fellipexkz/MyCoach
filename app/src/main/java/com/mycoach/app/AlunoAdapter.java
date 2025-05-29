@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import android.widget.RelativeLayout;
 import java.util.ArrayList;
@@ -13,8 +14,8 @@ import java.util.function.Consumer;
 
 public class AlunoAdapter extends RecyclerView.Adapter<AlunoAdapter.AlunoViewHolder> {
 
-    private List<Aluno> alunos;
-    private Consumer<Aluno> onAlunoClickListener;
+    private final List<Aluno> alunos;
+    private final Consumer<Aluno> onAlunoClickListener;
 
     public AlunoAdapter(List<Aluno> alunos, Consumer<Aluno> onAlunoClickListener) {
         this.alunos = new ArrayList<>(alunos);
@@ -56,16 +57,53 @@ public class AlunoAdapter extends RecyclerView.Adapter<AlunoAdapter.AlunoViewHol
     }
 
     public void setAlunos(List<Aluno> novosAlunos) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new AlunoDiffCallback(this.alunos, novosAlunos));
+
         this.alunos.clear();
         this.alunos.addAll(novosAlunos);
-        notifyDataSetChanged();
+
+        diffResult.dispatchUpdatesTo(this);
     }
 
-    static class AlunoViewHolder extends RecyclerView.ViewHolder {
-        TextView nomeTextView;
-        TextView emailTextView;
-        TextView thumbnailInitialTextView;
-        RelativeLayout thumbnailLayout;
+    private static class AlunoDiffCallback extends DiffUtil.Callback {
+        private final List<Aluno> oldList;
+        private final List<Aluno> newList;
+
+        AlunoDiffCallback(List<Aluno> oldList, List<Aluno> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            return oldList.get(oldItemPosition).getId() == newList.get(newItemPosition).getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            Aluno oldAluno = oldList.get(oldItemPosition);
+            Aluno newAluno = newList.get(newItemPosition);
+            return oldAluno.getId() == newAluno.getId() &&
+                    oldAluno.getNome().equals(newAluno.getNome()) &&
+                    oldAluno.getEmail().equals(newAluno.getEmail());
+        }
+    }
+
+    public static class AlunoViewHolder extends RecyclerView.ViewHolder {
+        final TextView nomeTextView;
+        final TextView emailTextView;
+        final TextView thumbnailInitialTextView;
+        final RelativeLayout thumbnailLayout;
 
         AlunoViewHolder(@NonNull View itemView) {
             super(itemView);

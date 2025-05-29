@@ -3,6 +3,7 @@ package com.mycoach.app;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -12,9 +13,8 @@ import java.util.List;
 public class AdicionarAlunoActivity extends AppCompatActivity {
 
     private TextInputEditText nameEditText, emailEditText, passwordEditText, confirmPasswordEditText;
-    private MaterialButton addButton;
     private BancoDeDadosHelper bancoDeDadosHelper;
-    private DataFirebase dbfire = new DataFirebase();
+    private final DataFirebase dbfire = new DataFirebase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,27 +25,35 @@ public class AdicionarAlunoActivity extends AppCompatActivity {
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
 
         nameEditText = findViewById(R.id.nameEditText);
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
-        addButton = findViewById(R.id.addButton);
+        MaterialButton addButton = findViewById(R.id.addButton);
 
         addButton.setOnClickListener(v -> {
-            String nome = nameEditText.getText().toString().trim();
-            String email = emailEditText.getText().toString().trim();
-            String senha = passwordEditText.getText().toString().trim();
-            String confirmarSenha = confirmPasswordEditText.getText().toString().trim();
+            String nome = nameEditText.getText() != null ? nameEditText.getText().toString().trim() : "";
+            String email = emailEditText.getText() != null ? emailEditText.getText().toString().trim() : "";
+            String senha = passwordEditText.getText() != null ? passwordEditText.getText().toString().trim() : "";
+            String confirmarSenha = confirmPasswordEditText.getText() != null ? confirmPasswordEditText.getText().toString().trim() : "";
 
             if (nome.isEmpty() || email.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {
-                Toast.makeText(AdicionarAlunoActivity.this, "Por favor, preencha todos os campos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_fill_all_fields, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (!senha.equals(confirmarSenha)) {
-                Toast.makeText(AdicionarAlunoActivity.this, "As senhas não coincidem", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_passwords_mismatch, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -59,10 +67,10 @@ public class AdicionarAlunoActivity extends AppCompatActivity {
                 aluno.setSenha(senha);
                 dbfire.sendFirebaseAluno(aluno, "alunos", bancoDeDadosHelper);
                 dbfire.syncWithFirebaseAluno(bancoDeDadosHelper, "alunos");
-                Toast.makeText(AdicionarAlunoActivity.this, "Aluno adicionado com sucesso", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_student_added, Toast.LENGTH_SHORT).show();
                 finish();
             } else {
-                Toast.makeText(AdicionarAlunoActivity.this, "Erro ao adicionar aluno, email já existe", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_error_adding_student, Toast.LENGTH_SHORT).show();
             }
         });
     }

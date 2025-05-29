@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/background">
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -13,7 +12,7 @@
         android:background="@color/primary_container"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_back"
-        app:title="Treinos do Aluno"
+        app:title="@string/title_treinos_aluno"
         app:titleTextColor="@color/on_primary_container" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -27,7 +26,7 @@
         android:id="@+id/semTreinosTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nenhum treino definido"
+        android:text="@string/text_sem_treinos"
         android:textSize="18sp"
         android:textColor="@color/on_surface"
         android:visibility="gone"

@@ -8,6 +8,7 @@ public class Treino {
     private int alunoId;
     private String nome;
     private String observacao;
+    private int diaSemanaIndex;
     private String diaSemana;
     private List<Exercicio> exercicios;
 
@@ -45,6 +46,14 @@ public class Treino {
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
+    }
+
+    public int getDiaSemanaIndex() {
+        return diaSemanaIndex;
+    }
+
+    public void setDiaSemanaIndex(int diaSemanaIndex) {
+        this.diaSemanaIndex = diaSemanaIndex;
     }
 
     public String getDiaSemana() {

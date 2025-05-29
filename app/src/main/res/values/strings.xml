@@ -1,4 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MyCoach</string>
+    <string name="treino_dia_semana_format">Dia: %s</string>
+    <string name="treino_nao_encontrado">Treino não encontrado</string>
+    <string name="confirmar_exclusao">Tem certeza que deseja excluir o treino %s?</string>
+    <string name="titulo_dialogo_exclusao">Confirmar Exclusão</string>
+    <string name="botao_confirmar">Confirmar</string>
+    <string name="botao_cancelar">Cancelar</string>
+    <string name="erro_exclusao">Este treino não pode ser excluído por você.</string>
+    <string name="titulo_erro">Erro</string>
+    <string name="botao_ok">OK</string>
+    <string name="observacao_prefix">Observação: %s</string>
+    <string name="sem_observacao">Sem observação</string>
+    <string name="serie_peso_repeticoes_format">%s kg x %s reps</string>
+    <string name="tempo_descanso_format">Tempo de Descanso: %s</string>
+    <string name="tempo_descanso_desativado">Desativado</string>
+    <plurals name="treino_exercicios_count">
+        <item quantity="one">%d exercício</item>
+        <item quantity="other">%d exercícios</item>
+    </plurals>
+    <string name="hint_nome">Nome</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_senha">Senha</string>
+    <string name="hint_confirme_senha">Confirme sua senha</string>
+    <string name="button_adicionar">Adicionar</string>
+    <string name="title_adicionar_aluno">Adicionar Aluno</string>
+    <string name="hint_titulo_treino">Título do Treino</string>
+    <string name="hint_observacao_opcional">Observação (opcional)</string>
+    <string name="hint_dia_semana">Dia da Semana</string>
+    <string name="label_exercicios">Exercícios</string>
+    <string name="title_adicionar_treino">Adicionar Treino</string>
+    <string name="title_bem_vindo">Bem-vindo</string>
+    <string name="text_ver_exercicios">Ver exercícios</string>
+    <string name="content_description_card_aluno">Imagem de duas pessoas treinando na academia, realizando agachamento com barra, promovendo exercícios físicos</string>
+    <string name="title_detalhes_aluno">Detalhes do Aluno</string>
+    <string name="text_nome_aluno">Nome do Aluno</string>
+    <string name="text_email_exemplo">email@exemplo.com</string>
+    <string name="text_avatar_initial">A</string>
+    <string name="button_excluir_aluno">Excluir Aluno</string>
+    <string name="title_detalhes_treino">Detalhes do Treino</string>
+    <string name="text_sem_alunos">Nenhum aluno cadastrado</string>
+    <string name="button_adicionar_aluno">Adicionar aluno</string>
+    <string name="title_alunos">Alunos</string>
+    <string name="title_bem_vindo_mycoach">Bem vindo ao MyCoach!</string>
+    <string name="subtitle_faca_login">Faça seu login para continuar.</string>
+    <string name="button_entrar">Entrar</string>
+    <string name="text_gerenciar_alunos">Gerenciar alunos</string>
+    <string name="content_description_card_personal">Imagem de duas pessoas na academia exibindo músculos com halteres, destacando resultados de treinamento</string>
+    <string name="title_treinos_aluno">Treinos do Aluno</string>
+    <string name="text_sem_treinos">Nenhum treino definido</string>
+    <string name="title_tempo_descanso">Tempo de Descanso</string>
+    <string name="text_nome_exercicio">Nome do Exercício</string>
+    <string name="content_description_avatar_aluno">Avatar do aluno</string>
+    <string name="text_aluno">Aluno</string>
+    <string name="text_aluno_email_exemplo">aluno@email.com</string>
+    <string name="content_description_exercicio_icon">Ícone de exercício</string>
+    <string name="label_exercicio">Exercício:</string>
+    <string name="content_description_tempo_descanso_icon">Ícone de tempo de descanso</string>
+    <string name="label_tempo_descanso">Tempo de descanso:</string>
+    <string name="label_serie">SÉRIE</string>
+    <string name="label_peso_repeticoes">PESO &amp; REPETIÇÕES</string>
+    <string name="hint_exercicio_nome">Nome do Exercício</string>
+    <string name="content_description_timer_icon">Ícone de relógio para ajustar o tempo de descanso entre exercícios</string>
+    <string name="text_tempo_descanso_default">Tempo de Descanso: 1min 0s</string>
+    <string name="label_kg">KG</string>
+    <string name="label_reps">REPS</string>
+    <string name="button_adicionar_serie">Adicionar Série</string>
+    <string name="button_adicionar_exercicio">Adicionar Exercício</string>
+    <string name="text_serie_numero_default">1</string>
+    <string name="hint_serie_valor">-</string>
+    <string name="action_excluir">Excluir</string>
+    <string name="action_sair">Sair</string>
+    <string-array name="dias_semana">
+        <item>Segunda-feira</item>
+        <item>Terça-feira</item>
+        <item>Quarta-feira</item>
+        <item>Quinta-feira</item>
+        <item>Sexta-feira</item>
+        <item>Sábado</item>
+        <item>Domingo</item>
+    </string-array>
+    <string name="toast_fill_all_fields">Por favor, preencha todos os campos</string>
+    <string name="toast_passwords_mismatch">As senhas não coincidem</string>
+    <string name="toast_student_added">Aluno adicionado com sucesso</string>
+    <string name="toast_error_adding_student">Erro ao adicionar aluno, email já existe</string>
+    <string name="toast_error_recover_client_id">Erro ao recuperar ID do aluno</string>
+    <string name="toast_invalid_credentials">Email ou senha incorretos</string>
+    <string name="toast_select_day">Selecione um dia da semana</string>
+    <string name="toast_invalid_day">Dia da semana inválido</string>
+    <string name="toast_error_client_id">Erro: ID do aluno não fornecido</string>
+    <string name="toast_error_add_training">Erro ao adicionar treino</string>
+    <string name="toast_error_recover_training_id">Erro ao recuperar ID do treino</string>
+    <string name="toast_fill_exercise_fields">Preencha todos os campos dos exercícios</string>
+    <string name="toast_fill_series_fields">Preencha todos os campos das séries</string>
+    <string name="toast_invalid_repetitions">O número de repetições deve ser maior que 0</string>
+    <string name="toast_invalid_numeric_repetitions">O número de repetições deve ser um valor numérico válido</string>
+    <string name="toast_error_add_exercise">Erro ao adicionar exercício</string>
+    <string name="toast_error_add_series">Erro ao adicionar série</string>
+    <string name="toast_training_added">Treino adicionado com sucesso</string>
+    <string name="toast_layout_error">Erro: Componentes do layout não encontrados!</string>
+    <string name="dialog_delete_title">Confirmar Exclusão</string>
+    <string name="dialog_delete_message">Tem certeza que deseja excluir o aluno %s?</string>
+    <string name="button_ver_exercicios_usuario">Ver Exercícios</string>
+    <string name="button_adicionar_exercicio_usuario">Adicionar Exercício</string>
+    <string name="title_my_exercises">Meus Exercícios</string>
+    <string name="title_client_workouts">Treinos do Aluno</string>
+    <string name="exercise_fallback_format">Exercício %d</string>
+    <string name="error_title_required">O título é obrigatório</string>
+    <string name="action_salvar">Salvar</string>
+    <string name="content_desc_salvar">Salvar treino</string>
 </resources>

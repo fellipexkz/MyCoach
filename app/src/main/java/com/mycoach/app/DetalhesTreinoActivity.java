@@ -5,23 +5,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import android.widget.TextView;
-
 import java.util.List;
 
 public class DetalhesTreinoActivity extends AppCompatActivity {
 
-    private RecyclerView exerciciosRecyclerView;
-    private ExercicioAdapter exercicioAdapter;
     private int treinoId;
     private int alunoId;
     private BancoDeDadosHelper bancoDeDadosHelper;
-    private DataFirebase dbfire = new DataFirebase();
+    private final DataFirebase dbfire = new DataFirebase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +31,14 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
         AppBarLayout appBarLayout = findViewById(R.id.appBarLayout);
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
 
         appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
             if (verticalOffset == 0) {
@@ -53,23 +58,24 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
         alunoId = getIntent().getIntExtra("aluno_id", -1);
         String treinoNome = getIntent().getStringExtra("treino_nome");
         String treinoObservacao = getIntent().getStringExtra("treino_observacao");
-        String treinoDiaSemana = getIntent().getStringExtra("treino_dia_semana");
+        int treinoDiaSemanaIndex = getIntent().getIntExtra("treino_dia_semana_index", -1);
 
-        Log.d("DetalhesTreinoActivity", "Dados recebidos - treinoId: " + treinoId + ", alunoId: " + alunoId + ", nome: " + treinoNome + ", dia: " + treinoDiaSemana);
+        Log.d("DetalhesTreinoActivity", "Dados recebidos - treinoId: " + treinoId + ", alunoId: " + alunoId + ", nome: " + treinoNome + ", diaIndex: " + treinoDiaSemanaIndex);
 
-        if (treinoId != -1 && alunoId != -1 && treinoNome != null && treinoDiaSemana != null) {
+        if (treinoId != -1 && alunoId != -1 && treinoNome != null && treinoDiaSemanaIndex != -1) {
             nomeTextView.setText(treinoNome);
-            diaSemanaTextView.setText("Dia: " + treinoDiaSemana);
-            observacaoTextView.setText(treinoObservacao != null ? "Observação: " + treinoObservacao : "Sem observação");
+            String[] diasSemana = getResources().getStringArray(R.array.dias_semana);
+            String treinoDiaSemana = diasSemana[treinoDiaSemanaIndex];
+            diaSemanaTextView.setText(String.format(getString(R.string.treino_dia_semana_format), treinoDiaSemana));
+            observacaoTextView.setText(treinoObservacao != null ? String.format(getString(R.string.observacao_prefix), treinoObservacao) : getString(R.string.sem_observacao));
 
-            exerciciosRecyclerView = findViewById(R.id.exerciciosRecyclerView);
+            RecyclerView exerciciosRecyclerView = findViewById(R.id.exerciciosRecyclerView);
             exerciciosRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             exerciciosRecyclerView.setNestedScrollingEnabled(false);
-            exercicioAdapter = new ExercicioAdapter();
+            ExercicioAdapter exercicioAdapter = new ExercicioAdapter();
             exerciciosRecyclerView.setAdapter(exercicioAdapter);
 
-            BancoDeDadosHelper db = new BancoDeDadosHelper(this);
-            List<Treino> treinos = db.obterTreinosPorAlunoId(alunoId);
+            List<Treino> treinos = bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId);
             Treino treinoExibido = null;
             for (Treino treino : treinos) {
                 if (treino.getId() == treinoId) {
@@ -86,7 +92,7 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
                 exercicioAdapter.setExercicios(treinoExibido.getExercicios());
             } else {
                 Log.d("DetalhesTreinoActivity", "Treino não encontrado para ID: " + treinoId);
-                nomeTextView.setText("Treino não encontrado");
+                nomeTextView.setText(getString(R.string.treino_nao_encontrado));
             }
         } else {
             Log.d("DetalhesTreinoActivity", "Dados insuficientes para exibir o treino");
@@ -111,11 +117,10 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
             TextView nomeTextView = findViewById(R.id.detalheTreinoNome);
             Log.d("Exclusão", "Tentando excluir treino - treinoId: " + treinoId + ", alunoId: " + alunoId);
             new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-                    .setTitle("Confirmar Exclusão")
-                    .setMessage("Tem certeza que deseja excluir o treino " + nomeTextView.getText() + "?")
-                    .setPositiveButton("Confirmar", (dialog, which) -> {
-                        BancoDeDadosHelper db = new BancoDeDadosHelper(this);
-                        List<Treino> treinos = db.obterTreinosPorAlunoId(alunoId);
+                    .setTitle(getString(R.string.titulo_dialogo_exclusao))
+                    .setMessage(String.format(getString(R.string.confirmar_exclusao), nomeTextView.getText()))
+                    .setPositiveButton(getString(R.string.botao_confirmar), (dialog, which) -> {
+                        List<Treino> treinos = bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId);
                         boolean treinoPertenceAoAluno = false;
                         for (Treino treino : treinos) {
                             if (treino.getId() == treinoId) {
@@ -135,13 +140,13 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
                         } else {
                             Log.e("Exclusão", "Treino ID " + treinoId + " não pertence ao aluno ID " + alunoId);
                             new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-                                    .setTitle("Erro")
-                                    .setMessage("Este treino não pode ser excluído por você.")
-                                    .setPositiveButton("OK", null)
+                                    .setTitle(getString(R.string.titulo_erro))
+                                    .setMessage(getString(R.string.erro_exclusao))
+                                    .setPositiveButton(getString(R.string.botao_ok), null)
                                     .show();
                         }
                     })
-                    .setNegativeButton("Cancelar", null)
+                    .setNegativeButton(getString(R.string.botao_cancelar), null)
                     .show();
             return true;
         }

@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +20,7 @@ public class VisualizarTreinosActivity extends AppCompatActivity {
     private TextView semTreinosTextView;
     private TreinoAdapter treinoAdapter;
     private BancoDeDadosHelper bancoDeDadosHelper;
-    private static final int REQUEST_CODE_DETALHES_TREINO = 2;
+    private ActivityResultLauncher<Intent> detalhesTreinoLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +29,35 @@ public class VisualizarTreinosActivity extends AppCompatActivity {
 
         bancoDeDadosHelper = new BancoDeDadosHelper(this);
 
+        detalhesTreinoLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null && data.getBooleanExtra("treino_deletado", false)) {
+                            int alunoId = getIntent().getIntExtra("aluno_id", -1);
+                            if (alunoId != -1) {
+                                List<Treino> treinosAtualizados = bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId);
+                                atualizarVisibilidade(treinosAtualizados);
+                            }
+                        }
+                    }
+                }
+        );
+
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
 
         boolean isAlunoFlow = getIntent().getBooleanExtra("is_aluno_flow", false);
-        toolbar.setTitle(isAlunoFlow ? "Meus Exercícios" : "Treinos do Aluno");
+        toolbar.setTitle(isAlunoFlow ? R.string.title_my_exercises : R.string.title_client_workouts);
 
         int alunoId = getIntent().getIntExtra("aluno_id", -1);
         if (alunoId == -1) {
@@ -49,28 +74,14 @@ public class VisualizarTreinosActivity extends AppCompatActivity {
             intent.putExtra("aluno_id", alunoId);
             intent.putExtra("treino_nome", treino.getNome());
             intent.putExtra("treino_observacao", treino.getObservacao());
-            intent.putExtra("treino_dia_semana", treino.getDiaSemana());
+            intent.putExtra("treino_dia_semana_index", treino.getDiaSemanaIndex());
             intent.putExtra("is_aluno_flow", isAlunoFlow);
-            startActivityForResult(intent, REQUEST_CODE_DETALHES_TREINO);
+            detalhesTreinoLauncher.launch(intent);
         });
         treinosRecyclerView.setAdapter(treinoAdapter);
 
         List<Treino> treinos = bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId);
         atualizarVisibilidade(treinos);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_DETALHES_TREINO && resultCode == RESULT_OK) {
-            if (data != null && data.getBooleanExtra("treino_deletado", false)) {
-                int alunoId = getIntent().getIntExtra("aluno_id", -1);
-                if (alunoId != -1) {
-                    List<Treino> treinosAtualizados = bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId);
-                    atualizarVisibilidade(treinosAtualizados);
-                }
-            }
-        }
     }
 
     private void atualizarVisibilidade(List<Treino> treinos) {

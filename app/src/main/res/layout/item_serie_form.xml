@@ -5,59 +5,53 @@
     android:layout_height="wrap_content"
     android:padding="4dp">
 
-    <TableLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:padding="4dp">
 
-        <TableRow
-            android:id="@+id/serieRow"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/serieNumero"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/surface"
-            android:padding="4dp">
+            android:layout_weight="1"
+            android:text="@string/text_serie_numero_default"
+            android:textColor="@color/on_surface"
+            android:textSize="16sp"
+            android:gravity="center" />
 
-            <TextView
-                android:id="@+id/serieNumero"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="1"
-                android:textColor="@color/on_surface"
-                android:textSize="16sp"
-                android:gravity="center" />
+        <EditText
+            android:id="@+id/serieCargaInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autofillHints="weight"
+            android:inputType="numberDecimal"
+            android:gravity="center"
+            android:hint="@string/hint_serie_valor"
+            android:textColor="@color/on_surface_variant"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
 
-            <EditText
-                android:id="@+id/serieCargaInput"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints="weight"
-                android:inputType="numberDecimal"
-                android:gravity="center"
-                android:hint="-"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="16sp"
-                android:imeOptions="actionNext"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
-
-            <EditText
-                android:id="@+id/serieRepeticoesInput"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints="count"
-                android:inputType="number"
-                android:gravity="center"
-                android:hint="-"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="16sp"
-                android:imeOptions="actionNext"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
-        </TableRow>
-    </TableLayout>
+        <EditText
+            android:id="@+id/serieRepeticoesInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autofillHints="count"
+            android:inputType="number"
+            android:gravity="center"
+            android:hint="@string/hint_serie_valor"
+            android:textColor="@color/on_surface_variant"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
