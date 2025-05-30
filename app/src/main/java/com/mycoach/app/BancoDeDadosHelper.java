@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -186,8 +185,6 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
             int columnIndex = cursor.getColumnIndex(COLUNA_ALUNO_ID);
             if (columnIndex >= 0) {
                 idAluno = cursor.getInt(columnIndex);
-            } else {
-                Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_ALUNO_ID + " não encontrada.");
             }
         }
         cursor.close();
@@ -209,13 +206,9 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
                 int senhaIndex = cursor.getColumnIndex(COLUNA_ALUNO_SENHA);
 
                 if (idIndex >= 0) aluno.setId(cursor.getInt(idIndex));
-                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_ALUNO_ID + " não encontrada.");
                 if (nomeIndex >= 0) aluno.setNome(cursor.getString(nomeIndex));
-                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_ALUNO_NOME + " não encontrada.");
                 if (emailIndex >= 0) aluno.setEmail(cursor.getString(emailIndex));
-                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_ALUNO_EMAIL + " não encontrada.");
                 if (senhaIndex >= 0) aluno.setSenha(cursor.getString(senhaIndex));
-                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_ALUNO_SENHA + " não encontrada.");
 
                 alunos.add(aluno);
             } while (cursor.moveToNext());
@@ -248,13 +241,9 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
             int senhaIndex = cursor.getColumnIndex(COLUNA_ALUNO_SENHA);
 
             if (idIndex >= 0) aluno.setId(cursor.getInt(idIndex));
-            else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_ALUNO_ID + " não encontrada.");
             if (nomeIndex >= 0) aluno.setNome(cursor.getString(nomeIndex));
-            else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_ALUNO_NOME + " não encontrada.");
             if (emailIndex >= 0) aluno.setEmail(cursor.getString(emailIndex));
-            else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_ALUNO_EMAIL + " não encontrada.");
             if (senhaIndex >= 0) aluno.setSenha(cursor.getString(senhaIndex));
-            else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_ALUNO_SENHA + " não encontrada.");
         }
         cursor.close();
         db.close();
@@ -277,14 +266,11 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
 
     public void deletarTreino(int treinoId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Log.d("SQLite", "Excluindo séries para treinoId: " + treinoId);
         db.execSQL("DELETE FROM " + TABELA_SERIES + " WHERE " + COLUNA_SERIE_EXERCICIO_ID + " IN (" +
                         "SELECT " + COLUNA_EXERCICIO_ID + " FROM " + TABELA_EXERCICIOS + " WHERE " + COLUNA_EXERCICIO_TREINO_ID + " = ?)",
                 new String[]{String.valueOf(treinoId)});
-        Log.d("SQLite", "Excluindo exercícios para treinoId: " + treinoId);
         db.execSQL("DELETE FROM " + TABELA_EXERCICIOS + " WHERE " + COLUNA_EXERCICIO_TREINO_ID + " = ?",
                 new String[]{String.valueOf(treinoId)});
-        Log.d("SQLite", "Excluindo treinoId: " + treinoId);
         db.delete(TABELA_TREINOS, COLUNA_TREINO_ID + " = ?", new String[]{String.valueOf(treinoId)});
         db.close();
     }
@@ -355,33 +341,6 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
         return existe;
     }
 
-    public boolean alunoIdExiste(int alunoId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT 1 FROM " + TABELA_TREINOS + " WHERE " + COLUNA_TREINO_ALUNO_ID + " = ?", new String[]{String.valueOf(alunoId)});
-        boolean existe = cursor.moveToFirst();
-        cursor.close();
-        db.close();
-        return existe;
-    }
-
-    public boolean treinoIdExiste(int treinoId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT 1 FROM " + TABELA_EXERCICIOS + " WHERE " + COLUNA_EXERCICIO_TREINO_ID + " = ?", new String[]{String.valueOf(treinoId)});
-        boolean existe = cursor.moveToFirst();
-        cursor.close();
-        db.close();
-        return existe;
-    }
-
-    public boolean exercicioIdExiste(int exercicioId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT 1 FROM " + TABELA_SERIES + " WHERE " + COLUNA_SERIE_EXERCICIO_ID + " = ?", new String[]{String.valueOf(exercicioId)});
-        boolean existe = cursor.moveToFirst();
-        cursor.close();
-        db.close();
-        return existe;
-    }
-
     public List<Treino> obterTreinosPorAlunoId(int idAluno) {
         List<Treino> listaTreinos = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -389,7 +348,6 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
                 "SELECT * FROM " + TABELA_TREINOS + " WHERE " + COLUNA_TREINO_ALUNO_ID + " = ?",
                 new String[]{String.valueOf(idAluno)}
         );
-        Log.d("BancoDeDadosHelper", "Consultando treinos para aluno ID: " + idAluno);
 
         if (cursorTreinos.moveToFirst()) {
             do {
@@ -401,16 +359,10 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
                 int diaSemanaIdx = cursorTreinos.getColumnIndex(COLUNA_TREINO_DIA_SEMANA);
 
                 if (idIndex >= 0) treino.setId(cursorTreinos.getInt(idIndex));
-                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_TREINO_ID + " não encontrada.");
                 if (alunoIdIndex >= 0) treino.setAlunoId(cursorTreinos.getInt(alunoIdIndex));
-                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_TREINO_ALUNO_ID + " não encontrada.");
                 if (nomeIndex >= 0) treino.setNome(cursorTreinos.getString(nomeIndex));
-                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_TREINO_NOME + " não encontrada.");
                 if (observacaoIndex >= 0) treino.setObservacao(cursorTreinos.getString(observacaoIndex));
                 if (diaSemanaIdx >= 0) treino.setDiaSemanaIndex(cursorTreinos.getInt(diaSemanaIdx));
-                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_TREINO_DIA_SEMANA + " não encontrada.");
-
-                Log.d("BancoDeDadosHelper", "Treino encontrado - ID: " + treino.getId() + ", Nome: " + treino.getNome() + ", Aluno ID: " + treino.getAlunoId());
 
                 List<Exercicio> exercicios = new ArrayList<>();
                 Cursor cursorExercicios = db.rawQuery(
@@ -427,22 +379,15 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
                         int tempoDescansoIndex = cursorExercicios.getColumnIndex(COLUNA_EXERCICIO_TEMPO_DESCANSO);
 
                         if (exIdIndex >= 0) exercicio.setId(cursorExercicios.getInt(exIdIndex));
-                        else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_EXERCICIO_ID + " não encontrada.");
                         if (exTreinoIdIndex >= 0) exercicio.setTreinoId(cursorExercicios.getInt(exTreinoIdIndex));
-                        else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_EXERCICIO_TREINO_ID + " não encontrada.");
                         if (exNomeIndex >= 0) exercicio.setNome(cursorExercicios.getString(exNomeIndex));
-                        else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_EXERCICIO_NOME + " não encontrada.");
                         if (tempoDescansoIndex >= 0) exercicio.setTempoDescanso(cursorExercicios.getString(tempoDescansoIndex));
-                        else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_EXERCICIO_TEMPO_DESCANSO + " não encontrada.");
-
-                        Log.d("BancoDeDadosHelper", "Exercício encontrado - ID: " + exercicio.getId() + ", Nome: " + exercicio.getNome() + ", Treino ID: " + exercicio.getTreinoId());
 
                         List<Serie> series = new ArrayList<>();
                         Cursor cursorSeries = db.rawQuery(
                                 "SELECT * FROM " + TABELA_SERIES + " WHERE " + COLUNA_SERIE_EXERCICIO_ID + " = ?",
                                 new String[]{String.valueOf(exercicio.getId())}
                         );
-                        Log.d("BancoDeDadosHelper", "Consultando séries para exercício ID: " + exercicio.getId() + ". Séries encontradas: " + cursorSeries.getCount());
 
                         if (cursorSeries.moveToFirst()) {
                             do {
@@ -453,16 +398,11 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
                                 int repeticoesIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_REPETICOES);
 
                                 if (serieIdIndex >= 0) serie.setId(cursorSeries.getInt(serieIdIndex));
-                                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_SERIE_ID + " não encontrada.");
                                 if (serieExIdIndex >= 0) serie.setExercicioId(cursorSeries.getInt(serieExIdIndex));
-                                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_SERIE_EXERCICIO_ID + " não encontrada.");
                                 if (cargaIndex >= 0) serie.setCarga(cursorSeries.getString(cargaIndex));
-                                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_SERIE_CARGA + " não encontrada.");
                                 if (repeticoesIndex >= 0) serie.setRepeticoes(String.valueOf(cursorSeries.getInt(repeticoesIndex)));
-                                else Log.e("BancoDeDadosHelper", "Coluna " + COLUNA_SERIE_REPETICOES + " não encontrada.");
 
                                 series.add(serie);
-                                Log.d("BancoDeDadosHelper", "Série encontrada - ID: " + serie.getId() + ", Carga: " + serie.getCarga() + ", Repetições: " + serie.getRepeticoes() + ", Exercicio ID: " + serie.getExercicioId());
                             } while (cursorSeries.moveToNext());
                         }
                         cursorSeries.close();
@@ -473,12 +413,10 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
                 cursorExercicios.close();
                 treino.setExercicios(exercicios);
                 listaTreinos.add(treino);
-                Log.d("BancoDeDadosHelper", "Treino " + treino.getId() + " - Exercícios: " + exercicios.size() + ", Séries totais: " + exercicios.stream().mapToInt(ex -> ex.getSeries().size()).sum());
             } while (cursorTreinos.moveToNext());
         }
         cursorTreinos.close();
         db.close();
-        Log.d("BancoDeDadosHelper", "Total de treinos encontrados para aluno " + idAluno + ": " + listaTreinos.size());
         return listaTreinos;
     }
 

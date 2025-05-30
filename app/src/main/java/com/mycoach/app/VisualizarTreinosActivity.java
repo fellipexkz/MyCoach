@@ -2,7 +2,6 @@ package com.mycoach.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
@@ -90,7 +89,6 @@ public class VisualizarTreinosActivity extends AppCompatActivity {
             treinosRecyclerView.setVisibility(View.VISIBLE);
             semTreinosTextView.setVisibility(View.GONE);
         } else {
-            Log.e("VisualizarTreinosActivity", "Lista de treinos vazia ou nula");
             treinosRecyclerView.setVisibility(View.GONE);
             semTreinosTextView.setVisibility(View.VISIBLE);
         }

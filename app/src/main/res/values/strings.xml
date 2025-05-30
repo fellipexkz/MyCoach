@@ -55,9 +55,7 @@
     <string name="text_aluno">Aluno</string>
     <string name="text_aluno_email_exemplo">aluno@email.com</string>
     <string name="content_description_exercicio_icon">Ícone de exercício</string>
-    <string name="label_exercicio">Exercício:</string>
     <string name="content_description_tempo_descanso_icon">Ícone de tempo de descanso</string>
-    <string name="label_tempo_descanso">Tempo de descanso:</string>
     <string name="label_serie">SÉRIE</string>
     <string name="label_peso_repeticoes">PESO &amp; REPETIÇÕES</string>
     <string name="hint_exercicio_nome">Nome do Exercício</string>
@@ -80,11 +78,6 @@
         <item>Sábado</item>
         <item>Domingo</item>
     </string-array>
-    <string name="toast_fill_all_fields">Por favor, preencha todos os campos</string>
-    <string name="toast_passwords_mismatch">As senhas não coincidem</string>
-    <string name="toast_student_added">Aluno adicionado com sucesso</string>
-    <string name="toast_error_adding_student">Erro ao adicionar aluno, email já existe</string>
-    <string name="toast_error_recover_client_id">Erro ao recuperar ID do aluno</string>
     <string name="toast_invalid_credentials">Email ou senha incorretos</string>
     <string name="toast_select_day">Selecione um dia da semana</string>
     <string name="toast_invalid_day">Dia da semana inválido</string>
@@ -109,4 +102,14 @@
     <string name="error_title_required">O título é obrigatório</string>
     <string name="action_salvar">Salvar</string>
     <string name="content_desc_salvar">Salvar treino</string>
+    <string name="content_description_card_image">Imagem do card</string>
+    <string name="toast_fill_all_fields">Por favor, preencha todos os campos</string>
+    <string name="toast_passwords_mismatch">As senhas não coincidem</string>
+    <string name="toast_student_added">Aluno adicionado com sucesso</string>
+    <string name="toast_error_adding_student">Erro ao adicionar aluno, email já existe</string>
+    <string name="toast_email_invalid">Email inválido, insira um email válido</string>
+    <string name="toast_error_recover_client_id">Erro ao recuperar ID do aluno</string>
+    <string name="toast_password_too_short">A senha deve ter pelo menos 5 caracteres</string>
+    <string name="toast_confirm_logout">Tem certeza que deseja sair?</string>
+    <string name="toast_logout_success">Logout realizado com sucesso</string>
 </resources>

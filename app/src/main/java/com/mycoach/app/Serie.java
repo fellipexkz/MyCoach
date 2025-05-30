@@ -1,5 +1,6 @@
 package com.mycoach.app;
 
+/** @noinspection unused*/
 public class Serie {
     private int id;
     private int exercicioId;

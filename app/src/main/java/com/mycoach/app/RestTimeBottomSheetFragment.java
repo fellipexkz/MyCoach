@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,6 @@ public class RestTimeBottomSheetFragment extends BottomSheetDialogFragment {
         this.adapter = adapter;
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,23 +63,18 @@ public class RestTimeBottomSheetFragment extends BottomSheetDialogFragment {
 
         if (currentRestTimeValue != null && !currentRestTimeValue.isEmpty()) {
             initialIndex = restTimeOptions.indexOf(currentRestTimeValue);
-            Log.d("RestTimePicker", "onCreate - Attempting to use currentRestTimeValue: '" + currentRestTimeValue + "', found at index: " + initialIndex);
         }
 
         if (initialIndex == -1) {
             String hardcodedDefaultRestTime = "1min 0s";
             initialIndex = restTimeOptions.indexOf(hardcodedDefaultRestTime);
-            Log.d("RestTimePicker", "onCreate - currentRestTimeValue not used. Attempting hardcoded default: '" + hardcodedDefaultRestTime + "', found at index: " + initialIndex);
         }
 
         if (initialIndex == -1) {
             selectedPosition = 0;
-            Log.w("RestTimePicker", "onCreate - No valid initial index found (neither current nor hardcoded default). Defaulting to 0.");
         } else {
             selectedPosition = initialIndex;
         }
-
-        Log.d("RestTimePicker", "onCreate - Final initial selectedPosition in fragment: " + selectedPosition);
     }
 
     @Nullable
@@ -103,36 +96,24 @@ public class RestTimeBottomSheetFragment extends BottomSheetDialogFragment {
 
         wheelPicker.setData(restTimeOptions);
 
-        wheelPicker.setOnItemSelectedListener((picker, data, positionFromEvent) -> {
-            int actualCurrentPosition = picker.getCurrentItemPosition();
-            Log.d("RestTimePicker", "Listener - positionFromEvent: " + positionFromEvent + ", actualCurrentPosition: " + actualCurrentPosition + ", data: " + data);
-            this.selectedPosition = actualCurrentPosition;
-        });
+        wheelPicker.setOnItemSelectedListener((picker, data, positionFromEvent) -> this.selectedPosition = picker.getCurrentItemPosition());
 
         wheelPicker.post(() -> {
             int intendedInitialPosition = this.selectedPosition;
-            Log.d("RestTimePicker", "Inside post - Attempting to set picker to intendedInitialPosition: " + intendedInitialPosition);
 
             if (intendedInitialPosition >= 0 && intendedInitialPosition < restTimeOptions.size()) {
                 wheelPicker.setSelectedItemPosition(intendedInitialPosition);
-                int reportedPositionAfterSet = wheelPicker.getCurrentItemPosition();
-                Log.d("RestTimePicker", "Inside post - After setSelectedItemPosition, picker.getCurrentItemPosition() reports: " + reportedPositionAfterSet + ". Fragment's selectedPosition remains: " + this.selectedPosition);
-
             } else {
-                Log.e("RestTimePicker", "Inside post - intendedInitialPosition is out of bounds: " + intendedInitialPosition + ". Setting picker to 0.");
                 wheelPicker.setSelectedItemPosition(0);
                 this.selectedPosition = 0;
             }
         });
 
         confirmButton.setOnClickListener(v -> {
-            Log.d("RestTimePicker", "Confirm button clicked. Using selectedPosition: " + this.selectedPosition);
             if (adapter != null && adapterPosition != RecyclerView.NO_POSITION) {
                 if (this.selectedPosition >= 0 && this.selectedPosition < restTimeOptions.size()) {
                     String selectedTime = restTimeOptions.get(this.selectedPosition);
                     adapter.updateRestTime(adapterPosition, selectedTime);
-                } else {
-                    Log.e("RestTimePicker", "Confirm button - Invalid selectedPosition: " + this.selectedPosition);
                 }
             }
             dismiss();

@@ -2,14 +2,12 @@ package com.mycoach.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import android.widget.TextView;
 import java.util.List;
@@ -28,7 +26,6 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
 
         bancoDeDadosHelper = new BancoDeDadosHelper(this);
 
-        AppBarLayout appBarLayout = findViewById(R.id.appBarLayout);
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
@@ -37,16 +34,6 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
             @Override
             public void handleOnBackPressed() {
                 finish();
-            }
-        });
-
-        appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
-            if (verticalOffset == 0) {
-                Log.d("DetalhesTreinoActivity", "AppBarLayout expandido");
-            } else if (Math.abs(verticalOffset) >= appBarLayout1.getTotalScrollRange()) {
-                Log.d("DetalhesTreinoActivity", "AppBarLayout colapsado");
-            } else {
-                Log.d("DetalhesTreinoActivity", "AppBarLayout parcialmente colapsado: " + verticalOffset);
             }
         });
 
@@ -59,8 +46,6 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
         String treinoNome = getIntent().getStringExtra("treino_nome");
         String treinoObservacao = getIntent().getStringExtra("treino_observacao");
         int treinoDiaSemanaIndex = getIntent().getIntExtra("treino_dia_semana_index", -1);
-
-        Log.d("DetalhesTreinoActivity", "Dados recebidos - treinoId: " + treinoId + ", alunoId: " + alunoId + ", nome: " + treinoNome + ", diaIndex: " + treinoDiaSemanaIndex);
 
         if (treinoId != -1 && alunoId != -1 && treinoNome != null && treinoDiaSemanaIndex != -1) {
             nomeTextView.setText(treinoNome);
@@ -85,24 +70,18 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
             }
 
             if (treinoExibido != null) {
-                Log.d("DetalhesTreinoActivity", "Treino encontrado - ID: " + treinoExibido.getId() + ", Exercícios: " + treinoExibido.getExercicios().size());
-                for (Exercicio ex : treinoExibido.getExercicios()) {
-                    Log.d("DetalhesTreinoActivity", "Exercício - Nome: " + ex.getNome() + ", Séries: " + ex.getSeries().size());
-                }
                 exercicioAdapter.setExercicios(treinoExibido.getExercicios());
             } else {
-                Log.d("DetalhesTreinoActivity", "Treino não encontrado para ID: " + treinoId);
                 nomeTextView.setText(getString(R.string.treino_nao_encontrado));
             }
         } else {
-            Log.d("DetalhesTreinoActivity", "Dados insuficientes para exibir o treino");
             finish();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        getMenuInflater().inflate(R.menu.delete_menu, menu);
         boolean isAlunoFlow = getIntent().getBooleanExtra("is_aluno_flow", false);
         MenuItem deleteItem = menu.findItem(R.id.action_delete);
         if (isAlunoFlow) {
@@ -115,7 +94,6 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_delete) {
             TextView nomeTextView = findViewById(R.id.detalheTreinoNome);
-            Log.d("Exclusão", "Tentando excluir treino - treinoId: " + treinoId + ", alunoId: " + alunoId);
             new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                     .setTitle(getString(R.string.titulo_dialogo_exclusao))
                     .setMessage(String.format(getString(R.string.confirmar_exclusao), nomeTextView.getText()))
@@ -130,7 +108,6 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
                         }
 
                         if (treinoPertenceAoAluno) {
-                            Log.d("Exclusão", "Treino pertence ao aluno. Excluindo...");
                             bancoDeDadosHelper.deletarTreino(treinoId);
                             dbfire.removeTreinoComDependencias(treinoId, "treinos");
                             Intent resultIntent = new Intent();
@@ -138,7 +115,6 @@ public class DetalhesTreinoActivity extends AppCompatActivity {
                             setResult(RESULT_OK, resultIntent);
                             finish();
                         } else {
-                            Log.e("Exclusão", "Treino ID " + treinoId + " não pertence ao aluno ID " + alunoId);
                             new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                                     .setTitle(getString(R.string.titulo_erro))
                                     .setMessage(getString(R.string.erro_exclusao))

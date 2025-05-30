@@ -77,7 +77,8 @@ public class DetalhesAlunoActivity extends AppCompatActivity {
                         .setTitle(R.string.dialog_delete_title)
                         .setMessage(getString(R.string.dialog_delete_message, nomeAlunoTextView.getText()))
                         .setPositiveButton(R.string.button_excluir_aluno, (dialog, which) -> {
-                            dbfire.removeFirebaseAluno(alunoId, "alunos", bancoDeDadosHelper);
+                            bancoDeDadosHelper.deletarAluno(alunoId);
+                            dbfire.removeFirebaseAluno(alunoId, "alunos");
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("aluno_deletado", true);
                             setResult(RESULT_OK, resultIntent);

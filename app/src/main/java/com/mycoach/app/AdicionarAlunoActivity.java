@@ -1,14 +1,13 @@
 package com.mycoach.app;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import java.util.List;
+import android.util.Patterns;
 
 public class AdicionarAlunoActivity extends AppCompatActivity {
 
@@ -52,35 +51,49 @@ public class AdicionarAlunoActivity extends AppCompatActivity {
                 return;
             }
 
+            if (senha.length() < 5) {
+                Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_password_too_short, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (!senha.equals(confirmarSenha)) {
                 Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_passwords_mismatch, Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            if (!isValidEmail(email)) {
+                Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_email_invalid, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (bancoDeDadosHelper.emailExiste(email)) {
+                Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_error_adding_student, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             boolean sucesso = bancoDeDadosHelper.adicionarAluno(nome, email, senha);
             if (sucesso) {
-                Aluno aluno = new Aluno();
-                aluno.setId(generateUniqueId());
-                Log.d("Aluno_id", String.valueOf(aluno.getId()));
-                aluno.setNome(nome);
-                aluno.setEmail(email);
-                aluno.setSenha(senha);
-                dbfire.sendFirebaseAluno(aluno, "alunos", bancoDeDadosHelper);
-                dbfire.syncWithFirebaseAluno(bancoDeDadosHelper, "alunos");
-                Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_student_added, Toast.LENGTH_SHORT).show();
-                finish();
+                int novoAlunoId = bancoDeDadosHelper.obterIdAlunoPorEmail(email);
+                if (novoAlunoId != -1) {
+                    Aluno aluno = new Aluno();
+                    aluno.setId(novoAlunoId);
+                    aluno.setNome(nome);
+                    aluno.setEmail(email);
+                    aluno.setSenha(senha);
+                    dbfire.sendFirebaseAluno(aluno, "alunos", bancoDeDadosHelper);
+                    Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_student_added, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_error_adding_student, Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(AdicionarAlunoActivity.this, R.string.toast_error_adding_student, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private int generateUniqueId() {
-        List<Aluno> users = bancoDeDadosHelper.obterTodosAlunos();
-        int maxId = 0;
-        for (Aluno u : users) {
-            if (u.getId() > maxId) maxId = u.getId();
-        }
-        return maxId + 1;
+    private boolean isValidEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }

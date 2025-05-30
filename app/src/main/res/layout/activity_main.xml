@@ -11,12 +11,12 @@
         android:layout_height="64dp"
         android:background="@color/primary_container"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/personal_main_menu"
+        app:menu="@menu/main_menu"
         app:title="@string/title_bem_vindo"
         app:titleTextColor="@color/on_primary_container" />
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/verExerciciosCard"
+        android:id="@+id/main_action_card"
         android:layout_width="360dp"
         android:layout_height="56dp"
         android:layout_marginTop="350dp"
@@ -33,7 +33,6 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/cardContent"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -49,10 +48,11 @@
                     android:layout_height="wrap_content"
                     android:letterSpacing="0.009375"
                     android:lineHeight="24dp"
-                    android:text="@string/text_gerenciar_alunos"
+                    android:text="@string/text_ver_exercicios"
                     android:textColor="@color/on_surface"
                     android:textSize="16sp"
-                    android:textStyle="normal|bold" />
+                    android:textStyle="normal|bold"
+                    android:visibility="invisible" />
 
             </LinearLayout>
 
@@ -60,9 +60,10 @@
                 android:id="@+id/cardMedia"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/card_personal"
-                android:contentDescription="@string/content_description_card_personal"
+                android:background="@drawable/card_aluno"
+                android:contentDescription="@string/content_description_card_image"
                 android:scaleType="centerCrop"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

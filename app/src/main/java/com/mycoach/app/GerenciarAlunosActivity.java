@@ -2,6 +2,7 @@ package com.mycoach.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
@@ -22,8 +23,10 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
     private TextView semAlunosTextView;
     private AlunoAdapter alunoAdapter;
     private BancoDeDadosHelper bancoDeDadosHelper;
+    private DataFirebase dbfire;
     private List<Aluno> listaAlunos;
     private ActivityResultLauncher<Intent> detalhesAlunoLauncher;
+    private ActivityResultLauncher<Intent> adicionarAlunoLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gerenciar_alunos);
 
         bancoDeDadosHelper = new BancoDeDadosHelper(this);
+        dbfire = new DataFirebase();
         listaAlunos = new ArrayList<>();
 
         detalhesAlunoLauncher = registerForActivityResult(
@@ -41,6 +45,15 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
                         if (data != null && data.getBooleanExtra("aluno_deletado", false)) {
                             carregarAlunos();
                         }
+                    }
+                }
+        );
+
+        adicionarAlunoLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        carregarAlunos();
                     }
                 }
         );
@@ -72,18 +85,17 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
 
         alunosRecyclerView.setItemAnimator(new androidx.recyclerview.widget.DefaultItemAnimator());
 
-        carregarAlunos();
-
         ExtendedFloatingActionButton adicionarAlunoFab = findViewById(R.id.adicionarAlunoFab);
-        adicionarAlunoFab.setOnClickListener(v -> {
-            Intent intent = new Intent(GerenciarAlunosActivity.this, AdicionarAlunoActivity.class);
-            startActivity(intent);
-        });
-    }
+        if (adicionarAlunoFab != null) {
+            adicionarAlunoFab.setOnClickListener(v -> {
+                Intent intent = new Intent(GerenciarAlunosActivity.this, AdicionarAlunoActivity.class);
+                adicionarAlunoLauncher.launch(intent);
+            });
+        } else {
+            Log.e("GerenciarAlunosActivity", "adicionarAlunoFab não encontrado no layout");
+        }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        dbfire.syncWithFirebaseAluno(bancoDeDadosHelper, "alunos");
         carregarAlunos();
     }
 
@@ -100,5 +112,12 @@ public class GerenciarAlunosActivity extends AppCompatActivity {
             alunosRecyclerView.setVisibility(View.VISIBLE);
             semAlunosTextView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dbfire.syncWithFirebaseAluno(bancoDeDadosHelper, "alunos");
+        carregarAlunos();
     }
 }

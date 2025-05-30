@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import java.util.List;
 
 public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdapter.ExercicioViewHolder> {
 
-    private static final String TAG = "ExercicioFormAdapter";
     private final List<Exercicio> exercicios;
     private RecyclerView exerciciosRecyclerView;
     private final NestedScrollView nestedScrollView;
@@ -64,7 +62,6 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
             if (focusedViewBottomOnScreen > targetVisibleBottomForEditText) {
                 int scrollAmountNeeded = focusedViewBottomOnScreen - targetVisibleBottomForEditText;
                 nestedScrollView.smoothScrollBy(0, scrollAmountNeeded);
-                Log.d(TAG, "Rolagem programática por: " + scrollAmountNeeded + " para " + viewToScrollTo.getId());
             }
         }, 200);
     }
@@ -176,7 +173,6 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
             InputMethodManager imm = (InputMethodManager) holder.itemView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) imm.showSoftInput(holder.exercicioNomeInput, InputMethodManager.SHOW_IMPLICIT);
             scrollToView(holder.exercicioNomeInput);
-            Log.d(TAG, "exercicioNomeInput clicado na posição " + holder.getBindingAdapterPosition());
         });
 
         if (exercicio.getSeries().isEmpty()) {
@@ -472,8 +468,6 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                     }
 
                     if (newItemView != null) {
-                        Log.d(TAG, "addExercicio: View do novo item encontrada na posição " + newPosition);
-
                         Rect visibleDisplayFrame = new Rect();
                         nestedScrollView.getWindowVisibleDisplayFrame(visibleDisplayFrame);
 
@@ -492,9 +486,7 @@ public class ExercicioFormAdapter extends RecyclerView.Adapter<ExercicioFormAdap
                         scrollToY = Math.max(0, scrollToY);
 
                         nestedScrollView.smoothScrollTo(0, scrollToY);
-                        Log.d(TAG, "addExercicio: Rolando NestedScrollView para Y: " + scrollToY);
                     } else {
-                        Log.w(TAG, "addExercicio: View do novo item NÃO encontrada para posição " + newPosition + ". Rolando para o final.");
                         nestedScrollView.post(() -> nestedScrollView.fullScroll(View.FOCUS_DOWN));
                     }
                 }, 250);

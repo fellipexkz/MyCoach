@@ -18,14 +18,13 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary_container"
             app:navigationIcon="@drawable/ic_back"
-            app:menu="@menu/toolbar_menu"
+            app:menu="@menu/delete_menu"
             app:title="@string/title_detalhes_treino"
             app:titleTextColor="@color/on_primary_container"
             app:layout_scrollFlags="scroll|enterAlways|snap" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView_detalhes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"

@@ -3,13 +3,11 @@ package com.mycoach.app;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 import java.util.Arrays;
 import java.util.List;
@@ -43,14 +41,9 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
         String[] diasSemana = getResources().getStringArray(R.array.dias_semana);
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        if (toolbar == null) {
-            Log.e("AdicionarTreino", "Toolbar não encontrada!");
-        }
         setSupportActionBar(toolbar);
         if (toolbar != null) {
             toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
-        } else {
-            Log.e("AdicionarTreino", "Não foi possível configurar o navigation listener!");
         }
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -66,10 +59,6 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
         exerciciosRecyclerView = findViewById(R.id.exerciciosRecyclerView);
         NestedScrollView nestedScrollView = findViewById(R.id.nestedScrollView);
         AppBarLayout appBarLayout = findViewById(R.id.appBarLayout);
-        TextView exerciciosLabel = findViewById(R.id.exerciciosLabel);
-        if (exerciciosLabel == null) {
-            Log.e("AdicionarTreino", "exerciciosLabel não encontrada!");
-        }
 
         if (treinoNomeInput == null || treinoObservacaoInput == null || treinoDiaSemanaInput == null ||
                 exerciciosRecyclerView == null || nestedScrollView == null || appBarLayout == null) {
@@ -107,7 +96,6 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
                 exercicioInicial.getSeries().add(serie);
             }
             exercicioAdapter.addExercicio(exercicioInicial);
-            Log.d("AdicionarTreino", "Exercício inicial adicionado");
         });
 
         exerciciosRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
@@ -120,7 +108,6 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
             if (imm != null) {
                 imm.showSoftInput(treinoNomeInput, InputMethodManager.SHOW_IMPLICIT);
             }
-            Log.d("AdicionarTreino", "treinoNomeInput clicado");
         });
 
         treinoObservacaoInput.setOnClickListener(v -> {
@@ -131,7 +118,6 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
             if (imm != null) {
                 imm.showSoftInput(treinoObservacaoInput, InputMethodManager.SHOW_IMPLICIT);
             }
-            Log.d("AdicionarTreino", "treinoObservacaoInput clicado");
         });
 
         treinoDiaSemanaInput.setOnClickListener(v -> {
@@ -139,7 +125,6 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
             treinoDiaSemanaInput.setFocusableInTouchMode(true);
             treinoDiaSemanaInput.requestFocus();
             treinoDiaSemanaInput.showDropDown();
-            Log.d("AdicionarTreino", "treinoDiaSemanaInput clicado");
         });
 
         treinoNomeInput.setImeOptions(EditorInfo.IME_ACTION_NEXT);
@@ -241,7 +226,6 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
             if (imm != null) {
                 imm.hideSoftInputFromWindow(nestedScrollView.getWindowToken(), 0);
             }
-            Log.d("AdicionarTreino", "Foco inicial direcionado e teclado ocultado.");
         });
 
         int alunoId = getIntent().getIntExtra("aluno_id", -1);
@@ -316,7 +300,6 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
             return;
         }
 
-        Log.d("AdicionarTreinoActivity", "Treino salvo - ID: " + treinoId + ", Nome: " + nome);
         treino.setId((int)treinoId);
         treino.setDiaSemanaIndex(diaSemanaIndex);
 
@@ -334,8 +317,6 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.toast_error_add_exercise, Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            Log.d("AdicionarTreinoActivity", "Exercício salvo - ID: " + exercicioId + ", Nome: " + exercicioNome + ", Tempo Descanso: " + tempoDescanso);
 
             for (Serie serieParaValidar : exercicio.getSeries()) {
                 String cargaVal = serieParaValidar.getCarga().trim();
@@ -370,14 +351,13 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
                 serie.setExercicioId((int) exercicioId);
                 serie.setRepeticoes(repeticoes);
 
-                dbfire.sendFirebaseSerie(serie, "series", bancoDeDadosHelper);
-                Log.d("AdicionarTreinoActivity", "Série salva - ID: " + serieId + ", Carga: " + carga + ", Repetições: " + repeticoes);
+                dbfire.sendFirebaseSerie(serie, "series");
             }
             exercicio.setId((int) exercicioId);
             exercicio.setTreinoId((int) treinoId);
             exercicio.setNome(exercicioNome);
             exercicio.setTempoDescanso(tempoDescanso);
-            dbfire.sendFirebaseExercise(exercicio, "exercicios", bancoDeDadosHelper);
+            dbfire.sendFirebaseExercise(exercicio, "exercicios");
         }
 
         Toast.makeText(this, R.string.toast_training_added, Toast.LENGTH_SHORT).show();
@@ -385,7 +365,7 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
         treino.setAlunoId(alunoId);
         treino.setObservacao(observacao.isEmpty() ? null : observacao);
         treino.setNome(nome);
-        dbfire.sendFirebaseTreino(treino, "treinos", bancoDeDadosHelper);
+        dbfire.sendFirebaseTreino(treino, "treinos");
 
         dbfire.syncWithFirebaseTreino(bancoDeDadosHelper, "treinos");
         dbfire.syncWithFirebaseExercise(bancoDeDadosHelper, "exercicios");

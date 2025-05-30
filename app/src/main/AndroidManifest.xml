@@ -13,6 +13,9 @@
         android:theme="@style/Theme.MyCoach"
         tools:targetApi="31">
         <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".DetalhesTreinoActivity"
             android:exported="false" />
         <activity
@@ -29,9 +32,6 @@
             android:name=".AdicionarAlunoActivity"
             android:exported="false" />
         <activity
-            android:name=".AlunoMainActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.MyCoach.Login">
@@ -41,9 +41,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".PersonalMainActivity"
-            android:exported="false" />
         <activity
             android:name=".GerenciarAlunosActivity"
             android:exported="false" />
