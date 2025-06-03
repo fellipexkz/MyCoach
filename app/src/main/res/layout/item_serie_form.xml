@@ -6,6 +6,7 @@
     android:padding="4dp">
 
     <LinearLayout
+        android:id="@+id/serieFieldsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -35,9 +36,7 @@
             android:hint="@string/hint_serie_valor"
             android:textColor="@color/on_surface_variant"
             android:textSize="16sp"
-            android:imeOptions="actionNext"
-            android:focusable="false"
-            android:focusableInTouchMode="false" />
+            android:visibility="visible" />
 
         <EditText
             android:id="@+id/serieRepeticoesInput"
@@ -50,8 +49,19 @@
             android:hint="@string/hint_serie_valor"
             android:textColor="@color/on_surface_variant"
             android:textSize="16sp"
-            android:imeOptions="actionNext"
-            android:focusable="false"
-            android:focusableInTouchMode="false" />
+            android:visibility="visible" />
+
+        <EditText
+            android:id="@+id/serieTempoInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autofillHints="time"
+            android:inputType="time"
+            android:gravity="center"
+            android:hint="@string/hint_serie_valor"
+            android:textColor="@color/on_surface_variant"
+            android:textSize="16sp"
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

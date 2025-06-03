@@ -13,7 +13,7 @@ import java.util.List;
 public class BancoDeDadosHelper extends SQLiteOpenHelper {
 
     private static final String NOME_BANCO = "mycoach.db";
-    private static final int VERSAO_BANCO = 3;
+    private static final int VERSAO_BANCO = 4;
 
     private static final String TABELA_PERSONAL = "personal";
     private static final String COLUNA_PERSONAL_ID = "id";
@@ -44,6 +44,9 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
     private static final String COLUNA_SERIE_EXERCICIO_ID = "exercicio_id";
     private static final String COLUNA_SERIE_CARGA = "carga";
     private static final String COLUNA_SERIE_REPETICOES = "repeticoes";
+    private static final String COLUNA_SERIE_TEMPO = "tempo";
+    private static final String COLUNA_SERIE_UNIDADE_TEMPO = "unidade_tempo";
+    private static final String COLUNA_SERIE_TIPO_SERIE = "tipo_serie";
 
     private final Context context;
 
@@ -92,8 +95,11 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
         String criarTabelaSeries = "CREATE TABLE " + TABELA_SERIES + " (" +
                 COLUNA_SERIE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUNA_SERIE_EXERCICIO_ID + " INTEGER NOT NULL, " +
-                COLUNA_SERIE_CARGA + " TEXT NOT NULL, " +
-                COLUNA_SERIE_REPETICOES + " INTEGER NOT NULL, " +
+                COLUNA_SERIE_CARGA + " TEXT, " +
+                COLUNA_SERIE_REPETICOES + " TEXT, " +
+                COLUNA_SERIE_TEMPO + " TEXT, " +
+                COLUNA_SERIE_UNIDADE_TEMPO + " TEXT, " +
+                COLUNA_SERIE_TIPO_SERIE + " TEXT NOT NULL, " +
                 "FOREIGN KEY (" + COLUNA_SERIE_EXERCICIO_ID + ") REFERENCES " + TABELA_EXERCICIOS + "(" + COLUNA_EXERCICIO_ID + "))";
         db.execSQL(criarTabelaSeries);
     }
@@ -146,6 +152,44 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
             }
             cursor.close();
             db.execSQL("DROP TABLE temp_treinos");
+        }
+
+        if (versaoAntiga < 4) {
+            db.execSQL("ALTER TABLE " + TABELA_SERIES + " RENAME TO temp_series");
+
+            String criarTabelaSeries = "CREATE TABLE " + TABELA_SERIES + " (" +
+                    COLUNA_SERIE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUNA_SERIE_EXERCICIO_ID + " INTEGER NOT NULL, " +
+                    COLUNA_SERIE_CARGA + " TEXT, " +
+                    COLUNA_SERIE_REPETICOES + " TEXT, " +
+                    COLUNA_SERIE_TEMPO + " TEXT, " +
+                    COLUNA_SERIE_UNIDADE_TEMPO + " TEXT, " +
+                    COLUNA_SERIE_TIPO_SERIE + " TEXT NOT NULL, " +
+                    "FOREIGN KEY (" + COLUNA_SERIE_EXERCICIO_ID + ") REFERENCES " + TABELA_EXERCICIOS + "(" + COLUNA_EXERCICIO_ID + "))";
+            db.execSQL(criarTabelaSeries);
+
+            Cursor cursor = db.rawQuery("SELECT * FROM temp_series", null);
+            if (cursor.moveToFirst()) {
+                do {
+                    ContentValues values = new ContentValues();
+                    int idIndex = cursor.getColumnIndex(COLUNA_SERIE_ID);
+                    int exercicioIdIndex = cursor.getColumnIndex(COLUNA_SERIE_EXERCICIO_ID);
+                    int cargaIndex = cursor.getColumnIndex(COLUNA_SERIE_CARGA);
+                    int repeticoesIndex = cursor.getColumnIndex(COLUNA_SERIE_REPETICOES);
+
+                    if (idIndex >= 0) values.put(COLUNA_SERIE_ID, cursor.getInt(idIndex));
+                    if (exercicioIdIndex >= 0) values.put(COLUNA_SERIE_EXERCICIO_ID, cursor.getInt(exercicioIdIndex));
+                    if (cargaIndex >= 0) values.put(COLUNA_SERIE_CARGA, cursor.getString(cargaIndex));
+                    if (repeticoesIndex >= 0) values.put(COLUNA_SERIE_REPETICOES, String.valueOf(cursor.getInt(repeticoesIndex)));
+                    values.put(COLUNA_SERIE_TEMPO, "");
+                    values.put(COLUNA_SERIE_UNIDADE_TEMPO, "min");
+                    values.put(COLUNA_SERIE_TIPO_SERIE, "carga_reps");
+
+                    db.insert(TABELA_SERIES, null, values);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.execSQL("DROP TABLE temp_series");
         }
     }
 
@@ -321,12 +365,15 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public long adicionarSerie(int exercicioId, String carga, int repeticoes) {
+    public long adicionarSerie(int exercicioId, Serie serie) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUNA_SERIE_EXERCICIO_ID, exercicioId);
-        values.put(COLUNA_SERIE_CARGA, carga);
-        values.put(COLUNA_SERIE_REPETICOES, repeticoes);
+        values.put(COLUNA_SERIE_CARGA, serie.getCarga());
+        values.put(COLUNA_SERIE_REPETICOES, serie.getRepeticoes());
+        values.put(COLUNA_SERIE_TEMPO, serie.getTempo());
+        values.put(COLUNA_SERIE_UNIDADE_TEMPO, serie.getUnidadeTempo());
+        values.put(COLUNA_SERIE_TIPO_SERIE, serie.getTipoSerie());
         long result = db.insert(TABELA_SERIES, null, values);
         db.close();
         return result;
@@ -396,11 +443,17 @@ public class BancoDeDadosHelper extends SQLiteOpenHelper {
                                 int serieExIdIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_EXERCICIO_ID);
                                 int cargaIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_CARGA);
                                 int repeticoesIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_REPETICOES);
+                                int tempoIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_TEMPO);
+                                int unidadeTempoIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_UNIDADE_TEMPO);
+                                int tipoSerieIndex = cursorSeries.getColumnIndex(COLUNA_SERIE_TIPO_SERIE);
 
                                 if (serieIdIndex >= 0) serie.setId(cursorSeries.getInt(serieIdIndex));
                                 if (serieExIdIndex >= 0) serie.setExercicioId(cursorSeries.getInt(serieExIdIndex));
                                 if (cargaIndex >= 0) serie.setCarga(cursorSeries.getString(cargaIndex));
-                                if (repeticoesIndex >= 0) serie.setRepeticoes(String.valueOf(cursorSeries.getInt(repeticoesIndex)));
+                                if (repeticoesIndex >= 0) serie.setRepeticoes(cursorSeries.getString(repeticoesIndex));
+                                if (tempoIndex >= 0) serie.setTempo(cursorSeries.getString(tempoIndex));
+                                if (unidadeTempoIndex >= 0) serie.setUnidadeTempo(cursorSeries.getString(unidadeTempoIndex));
+                                if (tipoSerieIndex >= 0) serie.setTipoSerie(cursorSeries.getString(tipoSerieIndex));
 
                                 series.add(serie);
                             } while (cursorSeries.moveToNext());

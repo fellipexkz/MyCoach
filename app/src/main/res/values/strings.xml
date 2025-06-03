@@ -12,7 +12,6 @@
     <string name="botao_ok">OK</string>
     <string name="observacao_prefix">Observação: %s</string>
     <string name="sem_observacao">Sem observação</string>
-    <string name="serie_peso_repeticoes_format">%s kg x %s reps</string>
     <string name="tempo_descanso_format">Tempo de Descanso: %s</string>
     <string name="tempo_descanso_desativado">Desativado</string>
     <plurals name="treino_exercicios_count">
@@ -83,7 +82,6 @@
     <string name="toast_invalid_day">Dia da semana inválido</string>
     <string name="toast_error_client_id">Erro: ID do aluno não fornecido</string>
     <string name="toast_error_add_training">Erro ao adicionar treino</string>
-    <string name="toast_error_recover_training_id">Erro ao recuperar ID do treino</string>
     <string name="toast_fill_exercise_fields">Preencha todos os campos dos exercícios</string>
     <string name="toast_fill_series_fields">Preencha todos os campos das séries</string>
     <string name="toast_invalid_repetitions">O número de repetições deve ser maior que 0</string>
@@ -112,4 +110,21 @@
     <string name="toast_password_too_short">A senha deve ter pelo menos 5 caracteres</string>
     <string name="toast_confirm_logout">Tem certeza que deseja sair?</string>
     <string name="toast_logout_success">Logout realizado com sucesso</string>
+    <string name="label_tipo_serie">Tipo de série:</string>
+    <string name="chip_carga_reps">Carga e reps</string>
+    <string name="chip_tempo">Tempo</string>
+    <string name="chip_repeticoes">Repetições</string>
+    <string name="chip_carga">Carga</string>
+    <string name="content_description_tempo_descanso">Selecionar tempo de descanso</string>
+    <string name="label_tempo">DURAÇÃO</string>
+    <string name="toast_invalid_time">O tempo deve ser maior que zero.</string>
+    <string name="toast_invalid_numeric_time">O tempo deve ser um número válido.</string>
+    <string name="toast_invalid_numeric_values">Os valores devem ser números válidos.</string>
+    <string name="label_detalhes_peso">CARGA</string>
+    <string name="label_detalhes_repeticoes">REPETIÇÕES</string>
+    <string name="unit_of_time">Unidade de Tempo:</string>
+    <string name="minutes">Minutos</string>
+    <string name="seconds">Segundos</string>
+    <string name="delete_series">Excluir Série</string>
+    <string name="toast_invalid_series_type">Tipo de série inválido.</string>
 </resources>

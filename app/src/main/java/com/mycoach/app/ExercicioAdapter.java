@@ -49,6 +49,20 @@ public class ExercicioAdapter extends RecyclerView.Adapter<ExercicioAdapter.Exer
 
             List<Serie> series = exercicio.getSeries();
 
+            String tipoSerie = series.isEmpty() ? "carga_reps" : series.get(0).getTipoSerie();
+
+            if (holder.detalhesHeader != null) {
+                if ("carga_reps".equals(tipoSerie)) {
+                    holder.detalhesHeader.setText(R.string.label_peso_repeticoes);
+                } else if ("carga".equals(tipoSerie)) {
+                    holder.detalhesHeader.setText(R.string.label_detalhes_peso);
+                } else if ("repeticoes".equals(tipoSerie)) {
+                    holder.detalhesHeader.setText(R.string.label_detalhes_repeticoes);
+                } else if ("tempo".equals(tipoSerie)) {
+                    holder.detalhesHeader.setText(R.string.label_tempo);
+                }
+            }
+
             int padding_4dp_in_px = (int) TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP, 4, holder.itemView.getContext().getResources().getDisplayMetrics());
 
@@ -68,14 +82,29 @@ public class ExercicioAdapter extends RecyclerView.Adapter<ExercicioAdapter.Exer
                 serieNumberText.setGravity(android.view.Gravity.CENTER);
                 row.addView(serieNumberText);
 
-                TextView pesoRepText = new TextView(holder.itemView.getContext());
-                pesoRepText.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2f));
-                pesoRepText.setText(String.format(holder.itemView.getContext().getResources().getString(R.string.serie_peso_repeticoes_format), serie.getCarga(), serie.getRepeticoes()));
-                pesoRepText.setTextSize(14);
-                pesoRepText.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.on_surface));
-                pesoRepText.setGravity(android.view.Gravity.CENTER);
-                row.addView(pesoRepText);
+                TextView detalhesText = new TextView(holder.itemView.getContext());
+                detalhesText.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2f));
+                detalhesText.setTextSize(14);
+                detalhesText.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.on_surface));
+                detalhesText.setGravity(android.view.Gravity.CENTER);
 
+                if ("carga_reps".equals(tipoSerie)) {
+                    String carga = serie.getCarga().isEmpty() ? "-" : serie.getCarga();
+                    String repeticoes = serie.getRepeticoes().isEmpty() ? "-" : serie.getRepeticoes();
+                    detalhesText.setText(String.format("%s kg x %s reps", carga, repeticoes));
+                } else if ("carga".equals(tipoSerie)) {
+                    String carga = serie.getCarga().isEmpty() ? "-" : serie.getCarga();
+                    detalhesText.setText(String.format("%s kg", carga));
+                } else if ("repeticoes".equals(tipoSerie)) {
+                    String repeticoes = serie.getRepeticoes().isEmpty() ? "-" : serie.getRepeticoes();
+                    detalhesText.setText(String.format("%s reps", repeticoes));
+                } else if ("tempo".equals(tipoSerie)) {
+                    String tempo = serie.getTempo().isEmpty() ? "-" : serie.getTempo();
+                    String unidade = serie.getUnidadeTempo().equals("sec") ? "s" : "min";
+                    detalhesText.setText(String.format("%s %s", tempo, unidade));
+                }
+
+                row.addView(detalhesText);
                 holder.seriesContainer.addView(row);
             }
         }
@@ -90,12 +119,14 @@ public class ExercicioAdapter extends RecyclerView.Adapter<ExercicioAdapter.Exer
         final TextView exercicioNomeText;
         final TextView exercicioTempoDescansoText;
         final LinearLayout seriesContainer;
+        final TextView detalhesHeader;
 
         ExercicioViewHolder(@NonNull View itemView) {
             super(itemView);
             exercicioNomeText = itemView.findViewById(R.id.exercicioNomeText);
             exercicioTempoDescansoText = itemView.findViewById(R.id.exercicioTempoDescansoText);
             seriesContainer = itemView.findViewById(R.id.seriesContainer);
+            detalhesHeader = itemView.findViewById(R.id.detalhesHeader);
         }
     }
 

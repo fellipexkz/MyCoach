@@ -9,6 +9,8 @@ public class Exercicio {
     private String nome;
     private String tempoDescanso;
     private List<Serie> series;
+    private int tipoSerieSelecionadoId = -1;
+    private int unidadeTempoSelecionadoId = -1;
 
     public Exercicio() {
         this.series = new ArrayList<>();
@@ -54,5 +56,21 @@ public class Exercicio {
 
     public void setSeries(List<Serie> series) {
         this.series = series;
+    }
+
+    public int getTipoSerieSelecionadoId() {
+        return tipoSerieSelecionadoId;
+    }
+
+    public void setTipoSerieSelecionadoId(int tipoSerieSelecionadoId) {
+        this.tipoSerieSelecionadoId = tipoSerieSelecionadoId;
+    }
+
+    public int getUnidadeTempoSelecionadoId() {
+        return unidadeTempoSelecionadoId;
+    }
+
+    public void setUnidadeTempoSelecionadoId(int unidadeTempoSelecionadoId) {
+        this.unidadeTempoSelecionadoId = unidadeTempoSelecionadoId;
     }
 }

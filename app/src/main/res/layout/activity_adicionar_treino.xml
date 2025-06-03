@@ -83,8 +83,10 @@
                         android:id="@+id/treinoObservacaoInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textMultiLine"
-                        android:lines="3"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:scrollHorizontally="true"
                         android:hint="@string/hint_observacao_opcional" />
                 </com.google.android.material.textfield.TextInputLayout>
 

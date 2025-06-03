@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class DataFirebase {
 
@@ -281,8 +282,19 @@ public class DataFirebase {
         if (listaDeSeries != null) {
             for (Serie serie : listaDeSeries) {
                 Map<String, Object> serieMap = new HashMap<>();
-                serieMap.put("carga", serie.getCarga());
-                serieMap.put("repeticoes", serie.getRepeticoes());
+                serieMap.put("exercicioId", serie.getExercicioId());
+                serieMap.put("tipoSerie", serie.getTipoSerie());
+                if (serie.getTipoSerie().equals("carga")) {
+                    serieMap.put("carga", serie.getCarga());
+                } else if (serie.getTipoSerie().equals("repeticoes")) {
+                    serieMap.put("repeticoes", serie.getRepeticoes());
+                } else if (serie.getTipoSerie().equals("tempo")) {
+                    serieMap.put("tempo", serie.getTempo());
+                    serieMap.put("unidadeTempo", serie.getUnidadeTempo());
+                } else if (serie.getTipoSerie().equals("carga_reps")) {
+                    serieMap.put("carga", serie.getCarga());
+                    serieMap.put("repeticoes", serie.getRepeticoes());
+                }
                 listaDeMapasDeSeries.add(serieMap);
             }
         }
@@ -317,6 +329,7 @@ public class DataFirebase {
                         for (DataSnapshot serieMapSnapshot : seriesArraySnapshot.getChildren()) {
                             Serie serie = new Serie();
                             serie.setExercicioId(exercicio.getId());
+                            serie.setTipoSerie(Objects.requireNonNullElse(serieMapSnapshot.child("tipoSerie").getValue(String.class), "carga_reps"));
                             if (serieMapSnapshot.hasChild("carga")) {
                                 serie.setCarga(serieMapSnapshot.child("carga").getValue(String.class));
                             }
@@ -326,6 +339,12 @@ public class DataFirebase {
                                     serie.setRepeticoes(String.valueOf(repeticoesValue));
                                 }
                             }
+                            if (serieMapSnapshot.hasChild("tempo")) {
+                                serie.setTempo(serieMapSnapshot.child("tempo").getValue(String.class));
+                            }
+                            if (serieMapSnapshot.hasChild("unidadeTempo")) {
+                                serie.setUnidadeTempo(serieMapSnapshot.child("unidadeTempo").getValue(String.class));
+                            }
                             seriesDoExercicio.add(serie);
                         }
                     }
@@ -333,6 +352,11 @@ public class DataFirebase {
 
                     if (exercicio.getId() != 0 && exercicio.getTreinoId() != 0) {
                         bancoDeDadosHelper.adicionarExercicio(exercicio.getTreinoId(), exercicio.getNome(), exercicio.getTempoDescanso(), exercicio.getId());
+                        for (Serie serie : seriesDoExercicio) {
+                            if (serie.getExercicioId() != 0) {
+                                bancoDeDadosHelper.adicionarSerie(serie.getExercicioId(), serie);
+                            }
+                        }
                     }
                 }
             }
@@ -371,6 +395,7 @@ public class DataFirebase {
                         Integer exercicioId = serieSnapshot.child("exercicioId").getValue(Integer.class);
                         if (exercicioId != null) serie.setExercicioId(exercicioId);
                     }
+                    serie.setTipoSerie(Objects.requireNonNullElse(serieSnapshot.child("tipoSerie").getValue(String.class), "carga_reps"));
                     if (serieSnapshot.hasChild("carga")) {
                         serie.setCarga(serieSnapshot.child("carga").getValue(String.class));
                     }
@@ -380,14 +405,14 @@ public class DataFirebase {
                             serie.setRepeticoes(String.valueOf(repeticoesValue));
                         }
                     }
-                    if (serie.getExercicioId() != 0 && serie.getRepeticoes() != null && !serie.getRepeticoes().isEmpty()) {
-                        int repeticoesInt;
-                        try {
-                            repeticoesInt = Integer.parseInt(serie.getRepeticoes());
-                        } catch (NumberFormatException e) {
-                            repeticoesInt = 0;
-                        }
-                        bancoDeDadosHelper.adicionarSerie(serie.getExercicioId(), serie.getCarga(), repeticoesInt);
+                    if (serieSnapshot.hasChild("tempo")) {
+                        serie.setTempo(serieSnapshot.child("tempo").getValue(String.class));
+                    }
+                    if (serieSnapshot.hasChild("unidadeTempo")) {
+                        serie.setUnidadeTempo(serieSnapshot.child("unidadeTempo").getValue(String.class));
+                    }
+                    if (serie.getExercicioId() != 0) {
+                        bancoDeDadosHelper.adicionarSerie(serie.getExercicioId(), serie);
                     }
                 }
             }
@@ -403,8 +428,18 @@ public class DataFirebase {
 
         Map<String, Object> serieMap = new HashMap<>();
         serieMap.put("exercicioId", serie.getExercicioId());
-        serieMap.put("carga", serie.getCarga());
-        serieMap.put("repeticoes", serie.getRepeticoes());
+        serieMap.put("tipoSerie", serie.getTipoSerie());
+        if (serie.getTipoSerie().equals("carga")) {
+            serieMap.put("carga", serie.getCarga());
+        } else if (serie.getTipoSerie().equals("repeticoes")) {
+            serieMap.put("repeticoes", serie.getRepeticoes());
+        } else if (serie.getTipoSerie().equals("tempo")) {
+            serieMap.put("tempo", serie.getTempo());
+            serieMap.put("unidadeTempo", serie.getUnidadeTempo());
+        } else if (serie.getTipoSerie().equals("carga_reps")) {
+            serieMap.put("carga", serie.getCarga());
+            serieMap.put("repeticoes", serie.getRepeticoes());
+        }
 
         if (firebasePushId != null) {
             firebaseSeriesRef.child(firebasePushId).setValue(serieMap)

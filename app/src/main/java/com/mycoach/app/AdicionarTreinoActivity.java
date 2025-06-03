@@ -93,8 +93,12 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
                 Serie serie = new Serie();
                 serie.setCarga("");
                 serie.setRepeticoes("");
+                serie.setTempo("");
+                serie.setUnidadeTempo("min");
+                serie.setTipoSerie("carga_reps");
                 exercicioInicial.getSeries().add(serie);
             }
+            exercicioInicial.setTempoDescanso("1min 0s");
             exercicioAdapter.addExercicio(exercicioInicial);
         });
 
@@ -294,12 +298,6 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
             return;
         }
 
-        List<Treino> treinos = bancoDeDadosHelper.obterTreinosPorAlunoId(alunoId);
-        if (treinos.isEmpty() || treinos.get(treinos.size() - 1).getId() != treinoId) {
-            Toast.makeText(this, R.string.toast_error_recover_training_id, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         treino.setId((int)treinoId);
         treino.setDiaSemanaIndex(diaSemanaIndex);
 
@@ -319,40 +317,100 @@ public class AdicionarTreinoActivity extends AppCompatActivity {
             }
 
             for (Serie serieParaValidar : exercicio.getSeries()) {
-                String cargaVal = serieParaValidar.getCarga().trim();
-                String repeticoesVal = serieParaValidar.getRepeticoes().trim();
-                if (cargaVal.isEmpty() || repeticoesVal.isEmpty()) {
-                    Toast.makeText(this, R.string.toast_fill_series_fields, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                try {
-                    int repeticoesIntVal = Integer.parseInt(repeticoesVal);
-                    if (repeticoesIntVal <= 0) {
-                        Toast.makeText(this, R.string.toast_invalid_repetitions, Toast.LENGTH_SHORT).show();
+                String tipoSerie = serieParaValidar.getTipoSerie();
+                switch (tipoSerie) {
+                    case "carga":
+                        String cargaVal = serieParaValidar.getCarga().trim();
+                        if (cargaVal.isEmpty()) {
+                            Toast.makeText(this, R.string.toast_fill_series_fields, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        try {
+                            Float.parseFloat(cargaVal);
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(this, R.string.toast_invalid_numeric_values, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        break;
+
+                    case "repeticoes":
+                        String repeticoesVal = serieParaValidar.getRepeticoes().trim();
+                        if (repeticoesVal.isEmpty()) {
+                            Toast.makeText(this, R.string.toast_fill_series_fields, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        try {
+                            int repeticoesIntVal = Integer.parseInt(repeticoesVal);
+                            if (repeticoesIntVal <= 0) {
+                                Toast.makeText(this, R.string.toast_invalid_repetitions, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(this, R.string.toast_invalid_numeric_repetitions, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        break;
+
+                    case "tempo":
+                        String tempoVal = serieParaValidar.getTempo().trim();
+                        if (tempoVal.isEmpty()) {
+                            Toast.makeText(this, R.string.toast_fill_series_fields, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        try {
+                            int tempoIntVal = Integer.parseInt(tempoVal);
+                            if (tempoIntVal <= 0) {
+                                Toast.makeText(this, R.string.toast_invalid_time, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(this, R.string.toast_invalid_numeric_time, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        break;
+
+                    case "carga_reps":
+                        String cargaValCargaReps = serieParaValidar.getCarga().trim();
+                        String repeticoesValCargaReps = serieParaValidar.getRepeticoes().trim();
+                        if (cargaValCargaReps.isEmpty() || repeticoesValCargaReps.isEmpty()) {
+                            Toast.makeText(this, R.string.toast_fill_series_fields, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        try {
+                            Float.parseFloat(cargaValCargaReps);
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(this, R.string.toast_invalid_numeric_values, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        try {
+                            int repeticoesIntVal = Integer.parseInt(repeticoesValCargaReps);
+                            if (repeticoesIntVal <= 0) {
+                                Toast.makeText(this, R.string.toast_invalid_repetitions, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(this, R.string.toast_invalid_numeric_repetitions, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        break;
+
+                    default:
+                        Toast.makeText(this, R.string.toast_invalid_series_type, Toast.LENGTH_SHORT).show();
                         return;
-                    }
-                } catch (NumberFormatException e) {
-                    Toast.makeText(this, R.string.toast_invalid_numeric_repetitions, Toast.LENGTH_SHORT).show();
-                    return;
                 }
             }
 
             for (Serie serie : exercicio.getSeries()) {
-                String carga = serie.getCarga().trim();
-                String repeticoes = serie.getRepeticoes().trim();
-                int repeticoesInt = Integer.parseInt(repeticoes);
-
-                long serieId = bancoDeDadosHelper.adicionarSerie((int) exercicioId, carga, repeticoesInt);
+                long serieId = bancoDeDadosHelper.adicionarSerie((int) exercicioId, serie);
                 if (serieId == -1) {
                     Toast.makeText(this, R.string.toast_error_add_series, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                serie.setCarga(carga);
+                serie.setId((int)serieId);
                 serie.setExercicioId((int) exercicioId);
-                serie.setRepeticoes(repeticoes);
-
                 dbfire.sendFirebaseSerie(serie, "series");
             }
+
             exercicio.setId((int) exercicioId);
             exercicio.setTreinoId((int) treinoId);
             exercicio.setNome(exercicioNome);

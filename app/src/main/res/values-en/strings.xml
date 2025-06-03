@@ -12,7 +12,6 @@
     <string name="botao_ok">OK</string>
     <string name="observacao_prefix">Note: %s</string>
     <string name="sem_observacao">No note</string>
-    <string name="serie_peso_repeticoes_format">%s kg x %s reps</string>
     <string name="tempo_descanso_format">Rest Time: %s</string>
     <string name="tempo_descanso_desativado">Disabled</string>
     <plurals name="treino_exercicios_count">
@@ -83,7 +82,6 @@
     <string name="toast_invalid_day">Invalid day of the week</string>
     <string name="toast_error_client_id">Error: Client ID not provided</string>
     <string name="toast_error_add_training">Error adding training</string>
-    <string name="toast_error_recover_training_id">Error recovering training ID</string>
     <string name="toast_fill_exercise_fields">Please fill all exercise fields</string>
     <string name="toast_fill_series_fields">Please fill all series fields</string>
     <string name="toast_invalid_repetitions">The number of repetitions must be greater than 0</string>
@@ -112,4 +110,21 @@
     <string name="toast_password_too_short">Password must be at least 5 characters long</string>
     <string name="toast_confirm_logout">Are you sure you want to logout?</string>
     <string name="toast_logout_success">Logout successful</string>
+    <string name="label_tipo_serie">Set type:</string>
+    <string name="chip_carga_reps">Weight and reps</string>
+    <string name="chip_tempo">Time</string>
+    <string name="chip_repeticoes">Repetitions</string>
+    <string name="chip_carga">Weight</string>
+    <string name="content_description_tempo_descanso">Select rest time</string>
+    <string name="label_tempo">DURATION</string>
+    <string name="toast_invalid_time">Time must be greater than zero.</string>
+    <string name="toast_invalid_numeric_time">Time must be a valid number.</string>
+    <string name="toast_invalid_numeric_values">Values must be valid numbers.</string>
+    <string name="label_detalhes_peso">LOAD</string>
+    <string name="label_detalhes_repeticoes">REPETITIONS</string>
+    <string name="unit_of_time">Unit of Time:</string>
+    <string name="minutes">Minutes</string>
+    <string name="seconds">Seconds</string>
+    <string name="delete_series">Delete Series</string>
+    <string name="toast_invalid_series_type">Invalid series type.</string>
 </resources>
