@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:hintEnabled="true"
-        android:hint="@string/hint_exercicio_nome">
+        android:hint="@string/text_nome_exercicio">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/exercicioNomeInput"

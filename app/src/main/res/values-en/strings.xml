@@ -31,7 +31,7 @@
     <string name="title_adicionar_treino">Add Workout</string>
     <string name="title_bem_vindo">Welcome</string>
     <string name="text_ver_exercicios">View Workouts</string>
-    <string name="content_description_card_aluno">Image of two people training at the gym, performing barbell squats, promoting physical exercise</string>
+    <string name="content_description_card_aluno">Image of two people training with barbell at gym</string>
     <string name="title_detalhes_aluno">Client Details</string>
     <string name="text_nome_aluno">Client Name</string>
     <string name="text_email_exemplo">example@email.com</string>
@@ -57,8 +57,7 @@
     <string name="content_description_tempo_descanso_icon">Rest time icon</string>
     <string name="label_serie">SET</string>
     <string name="label_peso_repeticoes">WEIGHT &amp; REPS</string>
-    <string name="hint_exercicio_nome">Exercise Name</string>
-    <string name="content_description_timer_icon">Clock icon to adjust rest time between exercises</string>
+    <string name="content_description_timer_icon">Clock icon for rest time</string>
     <string name="text_tempo_descanso_default">Rest Time: 1min 0s</string>
     <string name="label_kg">KG</string>
     <string name="label_reps">REPS</string>
@@ -101,13 +100,13 @@
     <string name="action_salvar">Save</string>
     <string name="content_desc_salvar">Save workout</string>
     <string name="content_description_card_image">Card image</string>
-    <string name="toast_fill_all_fields">Please fill all fields</string>
+    <string name="toast_fill_all_fields">Fill all fields</string>
     <string name="toast_passwords_mismatch">Passwords do not match</string>
     <string name="toast_student_added">Client added successfully</string>
     <string name="toast_error_adding_student">Error adding client, email already exists</string>
-    <string name="toast_email_invalid">Invalid email, please enter a valid email</string>
+    <string name="toast_email_invalid">Invalid email</string>
     <string name="toast_error_recover_client_id">Error recovering client ID</string>
-    <string name="toast_password_too_short">Password must be at least 5 characters long</string>
+    <string name="toast_password_too_short">Password must be at least 5 characters</string>
     <string name="toast_confirm_logout">Are you sure you want to logout?</string>
     <string name="toast_logout_success">Logout successful</string>
     <string name="label_tipo_serie">Set type:</string>
