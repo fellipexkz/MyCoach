@@ -30,8 +30,11 @@ dependencyResolutionManagement {
         maven {
             setUrl("https://maven.scijava.org/content/repositories/public/")
         }
+        maven {
+            setUrl("https://maven.aliyun.com/repository/public/")
+        }
     }
 }
 
 rootProject.name = "MyCoach"
-include(":app", ":WheelPicker")
+include(":app")
